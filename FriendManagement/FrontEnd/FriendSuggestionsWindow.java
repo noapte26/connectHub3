@@ -2,24 +2,26 @@ package FriendManagement.FrontEnd;
 
 import FriendMangement.BackEnd.*;
 import Account.*;
+import UserAccountManagementBackend.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class FriendSuggestionsWindow extends JFrame {
 
     private UserAccount Account;
     private FriendSuggestionFileManager fileManager;
 
-    public FriendSuggestionsWindow(UserAccount Account) {
+    public FriendSuggestionsWindow(UserAccount Account, ArrayList<UserAccount>Suggestons) {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        System.out.println("nada hates you");
         setVisible(true);
         this.Account = Account;
         this. fileManager = new FriendSuggestionFileManager();
-        ArrayList<UserAccount> Suggestions = (ArrayList<UserAccount>) fileManager.loadFriendSuggestions(Account.getUser().getUserId());
+        //ArrayList<UserAccount> Suggestions = (ArrayList<UserAccount>) fileManager.provideFriendSuggestions(Account.getUser().getUserId());
 
         setTitle("Friend Suggestions");
         setSize(400, 600);
@@ -39,7 +41,7 @@ public class FriendSuggestionsWindow extends JFrame {
         suggestionsContainer.setBackground(Color.decode("#121212")); // Dark background for container
 
         // Example Friend Suggestions
-        for (UserAccount user : Suggestions) {
+        for (UserAccount user : Suggestons) {
             JPanel suggestionPanel = createSuggestionPanel(user);
             suggestionsContainer.add(suggestionPanel);
             suggestionsContainer.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -66,9 +68,11 @@ public class FriendSuggestionsWindow extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
 
         // Profile Picture
-        JLabel profilePic = new JLabel(new ImageIcon(Account.getProfile().getProfileImageUrl()));
-        profilePic.setPreferredSize(new Dimension(75, 75));
-        panel.add(profilePic, BorderLayout.WEST);
+        JLabel profilePic = new JLabel(new ImageIcon(user.getProfile().getProfileImageUrl()));
+        ImageIcon profileIcon = new ImageIcon(user.getProfile().getProfileImageUrl());
+        Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Adjust profile image size
+        profilePic.setIcon(new ImageIcon(profileImage));
+        panel.add(profilePic,BorderLayout.WEST);
 
         //user datails and buttons
         JPanel detailsAndButtonsPanel = new JPanel(new BorderLayout());
@@ -90,6 +94,7 @@ public class FriendSuggestionsWindow extends JFrame {
 
         // Action for the Add button
         addButton.addActionListener(e -> {
+            System.out.println("nada hates you");
             fileManager.addFriend(Account, user);
             buttonPanel.removeAll();
             JLabel Add = new JLabel("Request Sent");

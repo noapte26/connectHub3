@@ -3,13 +3,15 @@ package FriendMangement.BackEnd;
 import Account.UserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BlockingListFileManager {
+
     private final String baseDirectory;
     private final ObjectMapper objectMapper;
 
@@ -34,74 +36,112 @@ public class BlockingListFileManager {
 
     // Load the blocking list for a user
     public ArrayList<UserAccount> loadBlockingList(String userId) {
+            
         String filePath = generateBlockingListFilePath(userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        ArrayList<UserAccount> accounts = new ArrayList<>();
 
-        try {
-            File file = new File(filePath);
-            if (file.exists() && file.length() > 0) { // Check if file exists and is not empty
-                CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, String.class);
-                return objectMapper.readValue(file, listType); // Deserialize JSON into List<String>
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                UserAccount account = objectMapper.readValue(line, UserAccount.class);
+                accounts.add(account);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading accounts from file: " + e.getMessage());
+            throw new RuntimeException("Failed to load accounts", e);
         }
-
-        return new ArrayList<>(); // Return an empty list if loading fails
+        finally {
+            return accounts;
+        }
+  // Return an empty list if loading fails
     }
 
     // Save the blocking list for a user
     public void saveBlockingList(String userId, ArrayList<UserAccount> blockingList) {
         String filePath = generateBlockingListFilePath(userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        File file =new File(filePath);
+ try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
+     if(blockingList.isEmpty())
+     {
+         // objectMapper.writeValue(file,friends);
+         try (PrintWriter pw = new PrintWriter(file)) {}
+         catch (IOException e) {
+             e.printStackTrace();
+         }
 
-        try {
-            objectMapper.writeValue(new File(filePath), blockingList);
-            System.out.println("Blocking list saved for user ID: " + userId);
-        } catch (IOException e) {
+     }
+            for (UserAccount user : blockingList)
+            {String profileJson = objectMapper.writeValueAsString(user);
+                writer.write(profileJson);
+                writer.newLine(); // Add a newline after each JSON object
+            }}
+ catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     // Add a user to the blocking list
-    public void blockUser(String userId, String username) {
-        ArrayList<UserAccount> blockingList = loadBlockingList(userId);
+    public void blockUser(UserAccount whoisblocking, UserAccount theblocked) {
+        ArrayList<UserAccount> blockingList = loadBlockingList(whoisblocking.getUser().getUserId());
 
-        FriendListFileManager fileManager=new FriendListFileManager();
+        FriendListFileManager fileManager = new FriendListFileManager();
 
-        ArrayList<UserAccount> friends = fileManager.loadFriendList(userId);
-
+        ArrayList<UserAccount> friends = fileManager.loadFriendList(whoisblocking.getUser().getUserId());
+        ArrayList<UserAccount> friendsoftheblocked = fileManager.loadFriendList(theblocked.getUser().getUserId());
         // Check if the friend is in the friend list
-        UserAccount friendAccount =null;
+        UserAccount friendAccount = null;
         for (UserAccount user : friends) {
-            if (user.getUser().getUserName().equalsIgnoreCase(username)) { // Case-insensitive comparison
-                friendAccount=user;
+            if (user.getUser().getUserId().equalsIgnoreCase(theblocked.getUser().getUserId())) { // Case-insensitive comparison
+                friendAccount = user;
                 break;
             }
         }
-        if(friendAccount!=null)
-        {
+        if (friendAccount != null) {
             friends.remove(friendAccount);
             blockingList.add(friendAccount);
-            this.saveBlockingList(userId,blockingList);
-            fileManager.saveFriendList(userId,friends);
+            this.saveBlockingList(whoisblocking.getUser().getUserId(), blockingList);
+            fileManager.saveFriendList(whoisblocking.getUser().getUserId(), friends);
         }
+
+         friendAccount = null;
+        for (UserAccount user : friendsoftheblocked) {
+            if (user.getUser().getUserId().equalsIgnoreCase(whoisblocking.getUser().getUserId())) { // Case-insensitive comparison
+                friendAccount = user;
+                break;
+            }
+        }
+
+        if (friendAccount != null) {
+            friendsoftheblocked.remove(friendAccount);
+            fileManager.saveFriendList(theblocked.getUser().getUserId(),friendsoftheblocked);
+            FriendSuggestionFileManager file=new FriendSuggestionFileManager();
+            file.removeFriendSuggestion(theblocked.getUser().getUserId(),whoisblocking);
+        }
+        for(UserAccount user:friendsoftheblocked)
+            System.out.println(user.getUser().getUserName());
+
     }
 
     // Remove a user from the blocking list
-    public void unblockUser(String userId, String username) {
+    public void unblockUser(String userId, UserAccount user1) {
         ArrayList<UserAccount> blockingList = loadBlockingList(userId);
 
         // Check if the user is in the block list
-        UserAccount Account =null;
+        UserAccount Account = null;
         for (UserAccount user : blockingList) {
-            if (user.getUser().getUserName().equalsIgnoreCase(username)) { // Case-insensitive comparison
-                Account=user;
+            if (user.getUser().getUserId().equalsIgnoreCase(user1.getUser().getUserId())) { // Case-insensitive comparison
+                Account = user;
                 break;
             }
         }
-        if(Account!=null)
-        {
+        if (Account != null) {
             blockingList.remove(Account);
-            this.saveBlockingList(userId,blockingList);
+            this.saveBlockingList(userId, blockingList);
         }
 
     }

@@ -5,10 +5,8 @@ import Account.UserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import UserAccountManagementBackend.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,14 +48,15 @@ public class FriendSuggestionFileManager {
             while ((line = reader.readLine()) != null) {
                 UserAccount account = objectMapper.readValue(line, UserAccount.class);
                 accounts.add(account);
-                return accounts;
             }
         } catch (IOException e) {
             System.err.println("Error reading accounts from file: " + e.getMessage());
             throw new RuntimeException("Failed to load accounts", e);
         }
 
-        return new ArrayList<>(); // Return an empty list if loading fails
+        finally {
+            return accounts;// Return an empty list if loading fails
+        }
     }
 
     // Save friend suggestions for a user
@@ -65,9 +64,24 @@ public class FriendSuggestionFileManager {
         String filePath = generateSuggestionFilePath(userId);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        try {
-            objectMapper.writeValue(new File(filePath), SuggestedUsers);
-            System.out.println("Friend suggestions saved for user ID: " + userId);
+        File file =new File(filePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
+            if(SuggestedUsers.isEmpty())
+            {
+                // objectMapper.writeValue(file,friends);
+                try (PrintWriter pw = new PrintWriter(file)) {}
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            for (UserAccount user : SuggestedUsers)
+            {
+                String profileJson = objectMapper.writeValueAsString(user);
+                writer.write(profileJson);
+                writer.newLine(); // Add a newline after each JSON object
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,38 +98,42 @@ public class FriendSuggestionFileManager {
         }
     }
 
-    public ArrayList<UserAccount> provideFriendSuggestions(String userId) {
+    public ArrayList<UserAccount> provideFriendSuggestions(UserAccount userAccount) {
         BlockingListFileManager blockingListFileManager = new BlockingListFileManager();
         FriendRequestFileManager friendRequestFileManager = new FriendRequestFileManager();
         FriendListFileManager friendListFileManager = new FriendListFileManager();
 
-        ArrayList<UserAccount> Blocked = (ArrayList<UserAccount>) blockingListFileManager.loadBlockingList(userId);
-        ArrayList<UserAccount> Requests = (ArrayList<UserAccount>) friendRequestFileManager.loadFriendRequests(userId);
-        ArrayList<UserAccount> Friends = (ArrayList<UserAccount>) friendListFileManager.loadFriendList(userId);
+        ArrayList<UserAccount> Blocked = (ArrayList<UserAccount>) blockingListFileManager.loadBlockingList(userAccount.getUser().getUserId());
+        ArrayList<UserAccount> Requests = (ArrayList<UserAccount>) friendRequestFileManager.loadFriendRequests(userAccount.getUser().getUserId());
+        ArrayList<UserAccount> Friends = (ArrayList<UserAccount>) friendListFileManager.loadFriendList(userAccount.getUser().getUserId());
 
-        HashSet<User> users = new HashSet<>();
+        HashSet<String> users = new HashSet<>();
         //Add BlockedList to the set
         for (UserAccount user : Blocked) {
-            users.add(user.getUser());
+            users.add(user.getUser().getUserId());
         }
         //Add RequestList to the set
         for (UserAccount user : Requests) {
-            users.add(user.getUser());
+            users.add(user.getUser().getUserId());
+            System.out.println(user.getUser().getUserName());
         }
         //Add FriendList to the set
         for (UserAccount user : Friends) {
-            users.add(user.getUser());
+            users.add(user.getUser().getUserId());
         }
+        //adding my account
+        users.add(userAccount.getUser().getUserId());
 
         ArrayList<UserAccount> SuggestedUsers = new ArrayList<>();
         HashSet<UserAccount> allUsers;
-        AccountLoad acc = null;
+        AccountLoad acc =new AccountLoad();
         allUsers = acc.loadAccounts();
         for (UserAccount user : allUsers) {
-            if (!users.contains(user)) {
+            if (!users.contains(user.getUser().getUserId())) {
                 SuggestedUsers.add(user);
             }
         }
+        this.saveFriendSuggestions(userAccount.getUser().getUserId(),SuggestedUsers);
         return SuggestedUsers;
     }
 
@@ -128,8 +146,9 @@ public class FriendSuggestionFileManager {
     }
 
     public void addFriend(UserAccount sender, UserAccount reciever) {
+        System.out.println("333");
         FriendRequestFileManager requestFileManager = new FriendRequestFileManager();
-        requestFileManager.addFriendRequest(sender.getUser().getUserId(), reciever);
+        requestFileManager.addFriendRequest(reciever.getUser().getUserId(), sender);
         removeFriendSuggestion(sender.getUser().getUserId(), reciever);
     }
 }
