@@ -34,7 +34,7 @@ public class FriendRequestWindow extends JFrame {
         requestsContainer.setLayout(new BoxLayout(requestsContainer, BoxLayout.Y_AXIS));
         requestsContainer.setBackground(Color.decode("#121212"));
         for (UserAccount user:requests) {
-            JPanel requestPanel = createRequestPanel(user.getUser().getUserName());
+            JPanel requestPanel = createRequestPanel(user);
             requestsContainer.add(requestPanel);
             requestsContainer.add(Box.createRigidArea(new Dimension(0, 15)));
         }
@@ -55,15 +55,17 @@ public class FriendRequestWindow extends JFrame {
 
 
 
-    private JPanel createRequestPanel(String username) {
+    private JPanel createRequestPanel(UserAccount user) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.decode("#121212"));
         panel.setLayout(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 
         // Profile Picture
-        JLabel profilePic = new JLabel(new ImageIcon(Account.getProfile().getProfileImageUrl()));
-        profilePic.setPreferredSize(new Dimension(75, 75));
+        JLabel profilePic = new JLabel(new ImageIcon(user.getProfile().getProfileImageUrl()));
+        ImageIcon profileIcon = new ImageIcon(user.getProfile().getProfileImageUrl());
+        Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Adjust profile image size
+        profilePic.setIcon(new ImageIcon(profileImage));
         panel.add(profilePic,BorderLayout.WEST);
 
         //user datails and buttons
@@ -71,7 +73,7 @@ public class FriendRequestWindow extends JFrame {
         detailsAndButtonsPanel.setBackground(Color.decode("#1E1E1E"));
 
         // Username
-        JLabel usernameLabel = new JLabel(username);
+        JLabel usernameLabel = new JLabel(user.getUser().getUserName());
         usernameLabel.setForeground(Color.WHITE); // White text
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -88,7 +90,7 @@ public class FriendRequestWindow extends JFrame {
 
 // Add an action listener for the Confirm button
         confirmButton.addActionListener(e -> {
-           fileManager.confirmFriendRequest(Account.getUser().getUserId(),username);
+           fileManager.confirmFriendRequest(Account,user.getUser().getUserName());
             buttonPanel.removeAll();
             JLabel Accepted=new JLabel("You are now Friends");
             Accepted.setForeground(Color.LIGHT_GRAY);
@@ -96,7 +98,7 @@ public class FriendRequestWindow extends JFrame {
             buttonPanel.add(Accepted);
         });
         deleteButton.addActionListener(e -> {
-            fileManager.deleteFriendRequest(Account.getUser().getUserId(),username);
+            fileManager.deleteFriendRequest(Account.getUser().getUserId(),user);
             buttonPanel.removeAll();
             JLabel Accepted=new JLabel(" Request removed ");
             Accepted.setForeground(Color.LIGHT_GRAY);

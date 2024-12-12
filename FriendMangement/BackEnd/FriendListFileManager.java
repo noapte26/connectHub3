@@ -2,9 +2,10 @@ package FriendMangement.BackEnd;
 import Account.UserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,31 +53,59 @@ public class FriendListFileManager {
     // Save a friend's list for a specific user
     public void saveFriendList(String userId, ArrayList<UserAccount> friends) {
         String filePath = generateFriendListFilePath(userId);
+         
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        File file =new File(filePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
+            if(friends.isEmpty())
+            {
+               // objectMapper.writeValue(file,friends);
+                try (PrintWriter pw = new PrintWriter(file)) {}
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-        try {
-            objectMapper.writeValue(new File(filePath), friends);
+            }
+            for (UserAccount user : friends)
+            {
+                String profileJson = objectMapper.writeValueAsString(user);
+                writer.write(profileJson);
+                writer.newLine(); // Add a newline after each JSON object
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+       
     }
 
     // Load the friend list for a specific user
     public ArrayList<UserAccount> loadFriendList(String userId) {
+        
         String filePath = generateFriendListFilePath(userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        ArrayList<UserAccount> accounts = new ArrayList<>();
 
-        try {
-            File file = new File(filePath);
-            if (file.exists() && file.length() > 0) { // Check if the file exists and is not empty
-                CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, String.class);
-                return objectMapper.readValue(file, listType); // Deserialize JSON into List<String>
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                UserAccount account = objectMapper.readValue(line, UserAccount.class);
+                accounts.add(account);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading accounts from file: " + e.getMessage());
+            throw new RuntimeException("Failed to load accounts", e);
+        }
+        finally {
+            return accounts;
         }
 
-        return new ArrayList<>(); // Return an empty list if loading fails
     }
+    
 
     // Add a friend to the user's friend list
     public void addFriend(String userId, String friendName) {
@@ -93,11 +122,11 @@ public class FriendListFileManager {
     }
 
     // Remove a friend from the user's friend list
-    public void removeFriend(String userId, String friendName) {
+    public void removeFriend(String userId, UserAccount user1) {
         ArrayList<UserAccount> friends = loadFriendList(userId);
         UserAccount friendAccount =null;
         for (UserAccount user : friends) {
-            if (user.getUser().getUserName().equalsIgnoreCase(friendName)) { // Case-insensitive comparison
+            if (user.getUser().getUserId().equalsIgnoreCase(user1.getUser().getUserId())) { // Case-insensitive comparison
                 friendAccount=user;
                 break;
             }
@@ -105,9 +134,9 @@ public class FriendListFileManager {
         friends.remove(friendAccount);
         saveFriendList(userId, friends);
     }
-    public void BlockFriend(String userId, String friendName) {
+    public void BlockFriend(UserAccount whoisblocking,  UserAccount theblocked) {
         BlockingListFileManager fileManager=new BlockingListFileManager();
-        fileManager.blockUser(userId,friendName);
+        fileManager.blockUser(whoisblocking,theblocked);
     }
 
 }

@@ -32,7 +32,7 @@ public class BlockedListWindow extends JFrame {
         BlockedContainer.setLayout(new BoxLayout(BlockedContainer, BoxLayout.Y_AXIS));
         BlockedContainer.setBackground(Color.decode("#121212"));
         for (UserAccount user:Blocked) {
-            JPanel requestPanel = createBlockedPanel(user.getUser().getUserName());
+            JPanel requestPanel = createBlockedPanel(user);
             BlockedContainer.add(requestPanel);
             BlockedContainer.add(Box.createRigidArea(new Dimension(0, 15)));
         }
@@ -50,7 +50,7 @@ public class BlockedListWindow extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         setVisible(true);
     }
-    private JPanel createBlockedPanel(String Username)
+    private JPanel createBlockedPanel(UserAccount user)
     {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.decode("#121212"));
@@ -58,16 +58,17 @@ public class BlockedListWindow extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 
         // Profile Picture
-        JLabel profilePic = new JLabel(new ImageIcon(Account.getProfile().getProfileImageUrl()));
-        profilePic.setPreferredSize(new Dimension(75, 75));
+        JLabel profilePic = new JLabel(new ImageIcon(user.getProfile().getProfileImageUrl()));
+        ImageIcon profileIcon = new ImageIcon(user.getProfile().getProfileImageUrl());
+        Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Adjust profile image size
+        profilePic.setIcon(new ImageIcon(profileImage));
         panel.add(profilePic,BorderLayout.WEST);
-
         //user datails and buttons
         JPanel detailsAndButtonsPanel = new JPanel(new BorderLayout());
         detailsAndButtonsPanel.setBackground(Color.decode("#1E1E1E"));
 
         // Username
-        JLabel usernameLabel = new JLabel(Username);
+        JLabel usernameLabel = new JLabel(user.getUser().getUserName());
         usernameLabel.setForeground(Color.WHITE); // White text
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -81,6 +82,7 @@ public class BlockedListWindow extends JFrame {
         JButton UnblockButton = new JButton("unblock");
 
         UnblockButton.addActionListener(e -> {
+            fileManager.unblockUser(Account.getUser().getUserId(),user);
             buttonPanel.removeAll();
             JLabel unblocked=new JLabel(" You un blocked this user ");
             unblocked.setForeground(Color.LIGHT_GRAY);
