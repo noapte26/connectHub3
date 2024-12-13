@@ -9,6 +9,7 @@ import Account.UserAccount;
 import GroupManagementBackEnd.Group;
 import GroupManagementBackEnd.commonRole;
 import GroupManagementBackEnd.ownerRole;
+import groupDataBase.MembersFileManager;
 import groupDataBase.UserGroupsFileManager;
 import groupDataBase.deleteGroup;
 import groupDataBase.groupLoad;
@@ -35,14 +36,15 @@ import javax.swing.JPopupMenu;
  * @author CONNECT
  */
 public class UserGroupsWindow extends javax.swing.JFrame {
-
+    
     UserAccount account;
     HashSet<Group> Groups;
-    UserGroupsFileManager userGroupsFileManager=new UserGroupsFileManager();
+    UserGroupsFileManager userGroupsFileManager = new UserGroupsFileManager();
+
     public UserGroupsWindow(UserAccount account) {
         initComponents();
         setVisible(true);
-
+        
         groupLoad a = new groupLoad();
         Groups = a.loadGroups();
         this.account = account;
@@ -50,25 +52,25 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         jScrollPane1.setViewportView(UserGroupsPanel);
         SuggestedGroupsPanel.setLayout(new BoxLayout(SuggestedGroupsPanel, BoxLayout.Y_AXIS));
         jScrollPane2.setViewportView(SuggestedGroupsPanel);
-       
-      
-            for (Group group : Groups) {
-                if (group.getOwner().getUser().getUserId().equals(account.getUser().getUserId()))
-                {  
-                 creategroupsLabel(group);
-                 UserGroupsPanel.add(Box.createVerticalStrut(10));
-                 System.out.println("Group Id :" + group.getGroupId());
-                }  
-                else 
-                { 
+        ArrayList <Group> userGroups = userGroupsFileManager.loadGroups(account.getUser().getUserId());
+        ArrayList<String> userGroupsIds= new ArrayList<>();
+        for (Group g :userGroups )
+        {userGroupsIds.add(g.getGroupId());
+        }
+        for (Group group : Groups) {
+            if (userGroupsIds.contains(group.getGroupId())) {                
+                creategroupsLabel(group);
+                UserGroupsPanel.add(Box.createVerticalStrut(10));
+                System.out.println("Group Id :" + group.getGroupId());
+            } else {                
                 createSuggestedgroupsLabel(group);
                 SuggestedGroupsPanel.add(Box.createVerticalStrut(10));
-             //   System.out.println("Group Id :" + group.getGroupId());
-                }
+                //   System.out.println("Group Id :" + group.getGroupId());
             }
-     
+        }
+        
     }
-
+    
     public void createSuggestedgroupsLabel(Group group) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.decode("#121212"));
@@ -79,7 +81,7 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         ImageIcon profileIcon = new ImageIcon(group.getPhoto());
         Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         profilePictureLabel.setIcon(new ImageIcon(profileImage));
-
+        
         panel.add(profilePictureLabel, BorderLayout.WEST);
 
         // User details (Username and Mutual Friends)
@@ -91,7 +93,7 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         JLabel usernameLabel = new JLabel(group.getName());
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         usernameLabel.setForeground(Color.WHITE);
-
+        
         userDetailsPanel.add(usernameLabel);
 
         // Ellipsis button (Options)
@@ -108,27 +110,23 @@ public class UserGroupsWindow extends javax.swing.JFrame {
 
         //Add options
         if (!account.getUser().getUserId().equals(group.getOwner().getUser().getUserId())) {
-            JMenuItem LeaveItem = new JMenuItem("Join");
-            LeaveItem.addActionListener(e -> {
-
-                commonRole c = new commonRole();
-                c.leaveGroup(account, group);
+            JMenuItem JoinItem = new JMenuItem("Join");
+            JoinItem.addActionListener(e -> {
+                MembersFileManager requestsFileManager = new MembersFileManager("requests_lists", "Requests");
+                ArrayList<UserAccount> req = requestsFileManager.loadMembers(group.getGroupId());
+                req.add(account);
+                requestsFileManager.saveMembers(group.getGroupId(), req);
             });
-            popupMenu.add(LeaveItem);
+            popupMenu.add(JoinItem);
         }
-        JMenuItem ViewItem = new JMenuItem("View Group");
-        ViewItem.addActionListener(e -> {
-            GroupWindow G = new GroupWindow(account, group);
-        });
-        popupMenu.add(ViewItem);
-
+        
         optionsButton.addActionListener(e -> popupMenu.show(optionsButton, optionsButton.getWidth() / 2, optionsButton.getHeight() / 2));
         buttonPanel.add(optionsButton);
         panel.add(userDetailsPanel, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.EAST);
         SuggestedGroupsPanel.add(panel);
     }
-
+    
     public void creategroupsLabel(Group group) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.decode("#121212"));
@@ -139,7 +137,7 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         ImageIcon profileIcon = new ImageIcon(group.getPhoto());
         Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         profilePictureLabel.setIcon(new ImageIcon(profileImage));
-
+        
         panel.add(profilePictureLabel, BorderLayout.WEST);
 
         // User details (Username and Mutual Friends)
@@ -151,7 +149,7 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         JLabel usernameLabel = new JLabel(group.getName());
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         usernameLabel.setForeground(Color.WHITE);
-
+        
         userDetailsPanel.add(usernameLabel);
 
         // Ellipsis button (Options)
@@ -170,7 +168,7 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         if (!account.getUser().getUserId().equals(group.getOwner().getUser().getUserId())) {
             JMenuItem LeaveItem = new JMenuItem("Leave");
             LeaveItem.addActionListener(e -> {
-
+                
                 commonRole c = new commonRole();
                 c.leaveGroup(account, group);
             });
@@ -178,9 +176,9 @@ public class UserGroupsWindow extends javax.swing.JFrame {
         } else {
             JMenuItem RemoveItem = new JMenuItem("Remove");
             RemoveItem.addActionListener(e -> {
-                ArrayList<Group>groups=userGroupsFileManager.loadGroups(account.getUser().getUserId());
+                ArrayList<Group> groups = userGroupsFileManager.loadGroups(account.getUser().getUserId());
                 groups.remove(group);
-                userGroupsFileManager.saveGroups(account.getUser().getUserId(),groups);
+                userGroupsFileManager.saveGroups(account.getUser().getUserId(), groups);
                 Groups.remove(group);
                 new deleteGroup(group);
             });
@@ -191,13 +189,13 @@ public class UserGroupsWindow extends javax.swing.JFrame {
             GroupWindow G = new GroupWindow(account, group);
         });
         popupMenu.add(ViewItem);
-
+        
         optionsButton.addActionListener(e -> popupMenu.show(optionsButton, optionsButton.getWidth() / 2, optionsButton.getHeight() / 2));
         buttonPanel.add(optionsButton);
         panel.add(userDetailsPanel, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.EAST);
         UserGroupsPanel.add(panel);
-
+        
     }
 
     /**
