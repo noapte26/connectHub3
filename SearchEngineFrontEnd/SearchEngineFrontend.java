@@ -9,7 +9,12 @@ import Account.UserAccount;
 import FriendMangement.BackEnd.BlockingListFileManager;
 import FriendMangement.BackEnd.FriendListFileManager;
 import FriendMangement.BackEnd.FriendSuggestionFileManager;
+import GroupManagementBackEnd.Group;
+import GroupManagementBackEnd.commonRole;
+import GroupManagementFrontEnd.CreateGroupWindow;
+import GroupManagementFrontEnd.GroupWindow;
 import SearchEngineBackend.SearchEngine;
+import groupDataBase.MembersFileManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -121,7 +127,9 @@ public class SearchEngineFrontend extends javax.swing.JFrame {
     }
        SearchEngine searchEngine = new SearchEngine();
        HashSet<UserAccount> accounts = searchEngine.searchAccount(userInput);
-       displaySearchResults(accounts);
+       HashSet<Group> groups=searchEngine.searchGroup(userInput);
+       displaySearchResults(accounts,groups);
+       
        
     }//GEN-LAST:event_jLabel1MousePressed
 
@@ -251,33 +259,159 @@ public class SearchEngineFrontend extends javax.swing.JFrame {
 
     return panel;
 }
+private JPanel createGroupPanel(Group group) {
+    UserAccount account = getAcc(authorId);
+    MembersFileManager membersFileManager = new MembersFileManager("Members_lists", "Member");
+    MembersFileManager adminsFileManager = new MembersFileManager("Admins_lists", "Admins");
+    ArrayList<UserAccount> groupMembers = membersFileManager.loadMembers(group.getGroupId());
+    UserAccount groupOwner = group.getOwner();
+    ArrayList<UserAccount> groupAdmins = adminsFileManager.loadMembers(group.getGroupId());
+
+    boolean isMember = isUserInGroup(groupMembers, account);
+    boolean isAdmin = isUserInGroup(groupAdmins, account);
+    boolean isOwner = groupOwner.getUser().getUserId().equals(account.getUser().getUserId());
+
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBackground(Color.decode("#121212"));
+    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+    // Group Picture
+    JLabel groupPictureLabel = new JLabel(new ImageIcon(group.getPhoto()));
+    groupPictureLabel.setPreferredSize(new Dimension(75, 75));
+    panel.add(groupPictureLabel, BorderLayout.WEST);
+
+    // Group details (GroupName and Description)
+    JPanel groupDetailsPanel = new JPanel();
+    groupDetailsPanel.setBackground(Color.decode("#121212"));
+    groupDetailsPanel.setLayout(new BoxLayout(groupDetailsPanel, BoxLayout.Y_AXIS));
+
+    // Adding the Group Name
+    JLabel groupNameLabel = new JLabel(group.getName());
+    groupNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+    groupNameLabel.setForeground(Color.WHITE);
+    groupDetailsPanel.add(groupNameLabel);
+
+    // Adding the Description
+    JLabel groupDescriptionLabel = new JLabel(group.getDiscription());
+    groupDescriptionLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+    groupDescriptionLabel.setForeground(Color.LIGHT_GRAY);
+    groupDetailsPanel.add(groupDescriptionLabel);
+
+    // Button Panel
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    buttonPanel.setBackground(Color.decode("#121212"));
+    JButton optionsButton = new JButton("...");
+    optionsButton.setBackground(Color.decode("#121212"));
+    optionsButton.setForeground(Color.WHITE);
+    optionsButton.setPreferredSize(new Dimension(40, 30));
+    optionsButton.setFocusPainted(false);
+
+    // Create the popup menu
+    JPopupMenu popupMenu = new JPopupMenu();
+
+    // Dynamic menu generation based on the user's role
+    optionsButton.addActionListener(e -> {
+        popupMenu.removeAll(); // Clear previous items
+
+        if (isOwner) {
+            addOwnerMenu(popupMenu, account, group);
+        } else if (isAdmin || isMember) {
+            addMemberOrAdminMenu(popupMenu, account, group);
+        } else {
+            addNonMemberMenu(popupMenu, account, group);
+        }
+
+        popupMenu.show(optionsButton, optionsButton.getWidth() / 2, optionsButton.getHeight() / 2);
+    });
+
+    buttonPanel.add(optionsButton);
+    panel.add(groupDetailsPanel, BorderLayout.CENTER);
+    panel.add(buttonPanel, BorderLayout.EAST);
+
+    return panel;
+}
+
+// Helper method to check if the user is in the group (member or admin)
+private boolean isUserInGroup(ArrayList<UserAccount> groupUsers, UserAccount account) {
+    for (UserAccount user : groupUsers) {
+        if (user.getUser().getUserId().equals(account.getUser().getUserId())) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Add menu for group owners
+private void addOwnerMenu(JPopupMenu popupMenu, UserAccount account, Group group) {
+    JMenuItem viewGroupItem = new JMenuItem("View Group");
+    viewGroupItem.addActionListener(viewEvent -> new GroupWindow(account, group)); // View the group as the owner
+    popupMenu.add(viewGroupItem);
+}
+
+// Add menu for group members or admins
+private void addMemberOrAdminMenu(JPopupMenu popupMenu, UserAccount account, Group group) {
+    JMenuItem viewGroupItem = new JMenuItem("View Group");
+    JMenuItem leaveGroupItem = new JMenuItem("Leave Group");
+
+    viewGroupItem.addActionListener(viewEvent -> new GroupWindow(account, group)); // View the group
+    leaveGroupItem.addActionListener(leaveEvent -> {
+        new commonRole().leaveGroup(account, group);
+        JOptionPane.showMessageDialog(null, "You have left the group.", "Group Left", JOptionPane.INFORMATION_MESSAGE);
+    });
+
+    popupMenu.add(viewGroupItem);
+    popupMenu.add(leaveGroupItem);
+}
+
+// Add menu for non-members (users who need to send a request to join)
+private void addNonMemberMenu(JPopupMenu popupMenu, UserAccount account, Group group) {
+    JMenuItem sendRequestItem = new JMenuItem("Send Request");
+    sendRequestItem.addActionListener(requestEvent -> {
+        // Logic to add the user to the request list
+        MembersFileManager requestsFileManager = new MembersFileManager("requests_lists", "Requests");
+        ArrayList<UserAccount> req = requestsFileManager.loadMembers(group.getGroupId());
+        req.add(account); // Add the user to the request list
+        requestsFileManager.saveMembers(group.getGroupId(), req); // Save the updated list
+        
+        JOptionPane.showMessageDialog(null, "Request sent to join the group.", "Request Sent", JOptionPane.INFORMATION_MESSAGE);
+    });
+    popupMenu.add(sendRequestItem);
+}
 
 
 
-  private void displaySearchResults(HashSet<UserAccount> accounts) {
+
+
+  private void displaySearchResults(HashSet<UserAccount> accounts,HashSet<Group> groups) {
     BlockingListFileManager fileManager = new BlockingListFileManager();
     ArrayList<UserAccount> blockingList = fileManager.loadBlockingList(authorId);
 
     JPanel containerPanel = new JPanel();
     containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS)); // Set vertical layout
     containerPanel.setBackground(Color.decode("#121212"));
- ArrayList<String> ids = new ArrayList<>() ;
+    ArrayList<String> ids = new ArrayList<>() ;
     // Add a panel for each user who is NOT in the blocking list
     for(UserAccount user: blockingList)
     {
         ids.add(user.getUser().getUserId());
     }
+    // and remove me from the search Engine Supposedly 
     ids.add(authorId);
    for(UserAccount users: accounts)
    {
-       if(!ids.contains(users.getUser().getUserId()));
+       if(!ids.contains(users.getUser().getUserId()))
        {
             JPanel userPanel = createFriendPanel(users);
             containerPanel.add(userPanel);
             containerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add vertical spacing
        }
    }
-
+for (Group gro: groups)
+{
+    JPanel groupPanel = createGroupPanel(gro);
+            containerPanel.add(groupPanel);
+            containerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add vertical spacing
+}
     // Set the containerPanel as the viewport for jScrollPane1
     jScrollPane1.setViewportView(containerPanel);
 
@@ -287,7 +421,7 @@ public class SearchEngineFrontend extends javax.swing.JFrame {
 }
 
 public UserAccount getAcc(String id) {
-    HashSet<UserAccount> accounts = new AccountLoad().loadAccounts();
+    ArrayList<UserAccount> accounts = new AccountLoad().loadAccounts();
         for (UserAccount user : accounts) {
             if (user.getUser().getUserId().equals(id)) {
                 return user;
