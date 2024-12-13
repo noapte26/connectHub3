@@ -37,15 +37,14 @@ public class ContentFileManager {
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         File file =new File(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
-            if(posts.isEmpty())
-            {
+           
                 // objectMapper.writeValue(file,friends);
                 try (PrintWriter pw = new PrintWriter(file)) {}
                 catch (IOException e) {
                     e.printStackTrace();
                 }
 
-            }
+            
             for (Post post : posts)
             {
                 String profileJson = objectMapper.writeValueAsString(post);
