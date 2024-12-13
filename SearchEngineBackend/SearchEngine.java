@@ -7,6 +7,8 @@ package SearchEngineBackend;
 import Account.AccountLoad;
 import Account.UserAccount;
 import GroupManagementBackEnd.Group;
+import groupDataBase.groupLoad;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
@@ -14,7 +16,7 @@ public class SearchEngine {
     
    public HashSet<UserAccount> searchAccount(String input)
    {
-   HashSet<UserAccount> accounts = new AccountLoad().loadAccounts();
+   ArrayList<UserAccount> accounts = new AccountLoad().loadAccounts();
    HashSet<UserAccount> accs= new HashSet<>();
    String normalizedInput =input.toLowerCase();
    for(UserAccount user:accounts )
@@ -28,10 +30,12 @@ public class SearchEngine {
    return accs;
    }
    
-   /*
+   
    public HashSet<Group> searchGroup(String input)
    {
-   HashSet<Group> Groups = new AccountLoad().loadAccounts();
+               
+ groupLoad group= new groupLoad();
+   HashSet<Group> Groups = group.loadGroups();
    HashSet<Group> groups= new HashSet<>();
    String normalizedInput =input.toLowerCase();
    for(Group gro: Groups )
@@ -46,7 +50,7 @@ public class SearchEngine {
    return groups;
    }
 
-    */ 
+    
     
     
     
