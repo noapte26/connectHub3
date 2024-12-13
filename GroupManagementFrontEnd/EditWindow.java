@@ -1,6 +1,7 @@
 package GroupManagementFrontEnd;
 
 import GroupManagementBackEnd.Group;
+import groupDataBase.Updategroup;
 
 import javax.swing.*;
 
@@ -21,7 +22,6 @@ public class EditWindow extends JFrame {
         this.group=group;
         setTitle("Edit Group");
         setSize(400, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Top Panel for group photo
@@ -117,7 +117,7 @@ public class EditWindow extends JFrame {
         } else {
             System.out.println("Photo remains unchanged.");
         }
-
+        new Updategroup(group);
         JOptionPane.showMessageDialog(this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 

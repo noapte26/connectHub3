@@ -20,7 +20,6 @@ public class EditPostWindow extends JFrame {
         this.post=post;
         setTitle("Edit Post");
         setSize(400, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Top Panel for Post photo
@@ -105,8 +104,12 @@ public class EditPostWindow extends JFrame {
 
         // Simulate saving changes (you can integrate backend saving logic here)
         commonRole c=new commonRole();
-        c.editPost(post,newGroupDescription,selectedPhotoFile.getAbsolutePath(),group);
-      //  JOptionPane.showMessageDialog(this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        String photoPath = null;
+        if (selectedPhotoFile!=null)
+        { photoPath=selectedPhotoFile.getAbsolutePath();}
+        c.editPost(post,newGroupDescription,photoPath,group);
+        JOptionPane.showMessageDialog(this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
     }
 
    /* public static void main(String[] args) {
