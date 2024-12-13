@@ -45,7 +45,6 @@ public class MembersFileManager {
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         File file =new File(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
-            if(members.isEmpty())
             {
                 // objectMapper.writeValue(file,friends);
                 try (PrintWriter pw = new PrintWriter(file)) {}
