@@ -19,6 +19,7 @@ Account\UserAccount.class
 TailoredNewsFeedBackend\TailoredPosts.class
 groupDataBase\UserGroupsFileManager.class
 Account\AccountLoad.class
+ProfileManagementFrontend\ProfileWindow$4.class
 ProfileManagementBackend\Profile.class
 ProfileManagementBackend\ProfileSaveAfterUpdate.class
 NewsFeedFrontEnd\NewsFeedWindow$6.class
@@ -27,9 +28,11 @@ GroupManagementFrontEnd\CreateGroupWindow.class
 UserAccountManagementFrontend\LoginWindpw.class
 GroupManagementFrontEnd\GroupWindow$3.class
 ContentCreation\backendContent$2.class
+interactionsBackEnd\comments.class
 ProfileManagementBackend\UpdateProfile.class
 ProfileManagementFrontend\ProfileWindow$3.class
 UserAccountManagementFrontend\LoginWindpw$1.class
+InteractionFrontEnd\likesWindow.class
 GroupManagementFrontEnd\RequestsWindow.class
 NewsFeedFrontEnd\NewsFeedWindow$4.class
 UserAccountManagementBackend\Validations.class
@@ -53,15 +56,20 @@ GroupManagementFrontEnd\GroupWindow$4.class
 UserAccountManagementFrontend\SignUpWindow$1.class
 groupDataBase\MembersFileManager.class
 NewsFeedFrontEnd\NewsFeedWindow$5.class
+NewsFeedFrontEnd\NewsFeedWindow$15.class
+interactionsBackEnd\like.class
 UserAccountManagementFrontend\WelcomeWindow$3.class
 ProfileManagementFrontend\CoverImageAvatar.class
 ProfileManagementFrontend\EditProfileWindow$1.class
 groupDataBase\groupSave.class
+InteractionFrontEnd\commentsWindow$3.class
+interactionsDataBase\likeFileManeger.class
 GroupManagementBackEnd\ownerRole.class
 SearchEngineFrontEnd\SearchEngineFrontend.class
 ProfileManagementFrontend\ProfileWindow$2.class
 GroupManagementFrontEnd\EditPostWindow.class
 groupDataBase\groupLoad.class
+interactionsDataBase\commentFileManeger.class
 UserAccountManagementFrontend\LoginWindpw$3.class
 FriendMangement\BackEnd\FriendSuggestionFileManager.class
 FrontendCreation\PostUploader$1.class
@@ -73,8 +81,10 @@ ProfileManagementFrontend\ProfileWindow.class
 GroupManagementBackEnd\adminRole.class
 FriendManagement\FrontEnd\FriendSuggestionsWindow.class
 FriendMangement\BackEnd\FriendRequestFileManager.class
+InteractionFrontEnd\commentsWindow$2.class
 ProfileManagementFrontend\EditProfileWindow$2.class
 TailoredNewsFeedBackend\TailoredPosts$1.class
+InteractionFrontEnd\commentsWindow.class
 NewsFeedFrontEnd\NewsFeedWindow$2.class
 GroupManagementFrontEnd\CreateGroupWindow$1.class
 FriendManagement\FrontEnd\FriendListWindow.class
@@ -96,6 +106,7 @@ ContentCreation\Story.class
 GroupManagementFrontEnd\CreateGroupWindow$2.class
 FrontendCreation\PostUploader.class
 ProfileManagementBackend\getUserProfile.class
+InteractionFrontEnd\commentsWindow$1.class
 FriendMangement\BackEnd\BlockingListFileManager.class
 NewsFeedFrontEnd\NewsFeedWindow$11.class
 ProfileManagementFrontend\EditProfileWindow$3.class
@@ -104,6 +115,7 @@ UserAccountManagementFrontend\WelcomeWindow$1.class
 GroupManagementFrontEnd\UserGroupsWindow$2.class
 FriendManagement\FrontEnd\BlockedListWindow.class
 NewsFeedFrontEnd\NewsFeedWindow$7.class
+GroupManagementFrontEnd\GroupWindow$7.class
 GroupManagementFrontEnd\AdminsWindow.class
 ProfileManagementFrontend\EditProfileWindow$4.class
 GroupManagementFrontEnd\AddPostWindow.class
