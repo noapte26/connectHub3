@@ -35,7 +35,7 @@ public class commentFileManeger {
     public String generateContentLikesListFilePath(String contentId) {
         return baseDirectory + File.separator + "Content_" + contentId + "_"+this.type+".json";
     }
-    public void savePosts(String contentId, ArrayList<comments> comments) {
+    public void saveComment(String contentId, ArrayList<comments> comments) {
         String filePath = generateContentLikesListFilePath(contentId);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,7 +64,7 @@ public class commentFileManeger {
 
     }
     // Load the friend list for a specific user
-    public ArrayList<comments> loadPosts(String conteentId) {
+    public ArrayList<comments> loadComment(String conteentId) {
 
         String filePath = generateContentLikesListFilePath(conteentId);
         ObjectMapper objectMapper = new ObjectMapper();
