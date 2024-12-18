@@ -2,15 +2,22 @@ package GroupManagementFrontEnd;
 
 import Account.AccountLoad;
 import Account.UserAccount;
+import InteractionFrontEnd.commentsWindow;
 import ContentCreation.*;
 
 import GroupManagementBackEnd.*;
 
+import InteractionFrontEnd.likesWindow;
 import UserAccountManagementBackend.User;
 import static UserAccountManagementBackend.getUser.getUser;
 import groupDataBase.ContentFileManager;
 import groupDataBase.MembersFileManager;
+import interactionsBackEnd.like;
+import interactionsDataBase.likeFileManeger;
+
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -183,29 +190,96 @@ showPosts();
             profilePictureLabel.setText("No Image"); // Placeholder text if no profile image
             profilePictureLabel.setHorizontalAlignment(SwingConstants.CENTER);
         }
-        singlePostPanel.add(profilePictureLabel, BorderLayout.WEST);
-
-        // Text Content Panel (Username + Content)
-        JPanel textContentPanel = new JPanel();
-        textContentPanel.setLayout(new BoxLayout(textContentPanel, BoxLayout.Y_AXIS));
+        JPanel postautherdata = new JPanel(new BorderLayout(10, 10));
+        postautherdata.add(profilePictureLabel,BorderLayout.WEST);
+        postautherdata.setBackground(Color.WHITE);
+        // Text Content Panel (Username + Content + Buttons)
+        JPanel textContentPanel = new JPanel(new BorderLayout(10, 10)); // Space between sections
         textContentPanel.setBackground(Color.WHITE);
 
         // Username
         String username = getAcc(post.getAuthorId()).getUser().getUserName();
         JLabel usernameLabel = new JLabel(username);
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-
+        postautherdata.add(usernameLabel,BorderLayout.CENTER);
         // Post Content
         String content = (post.getContent() != null && !post.getContent().isEmpty()) ? post.getContent() : "No content available";
         JLabel contentLabel = new JLabel(content);
         contentLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
-        // Add username and content to the text panel
-        textContentPanel.add(usernameLabel);
+        // Like and Comment Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Small gap between buttons
+       //buttonPanel.setBackground(Color.decode("#1E1E1E"));
+        JLabel likes1=new JLabel("likes");
+        likes1.setFont(new Font("Arial", Font.BOLD, 14));
+        buttonPanel.add(likes1,BorderLayout.NORTH);
+        JButton likeButton = new JButton("Like");
+        JButton commentButton = new JButton("Comment");
+        likeFileManeger l=new likeFileManeger("Likes");
+        ArrayList<like>likes=l.loadLike(post.getContentId());
+        JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        like li=null;
+        for(like l1:likes)
+        {
+            if(l1.getAccount().getUser().getUserId().equals(account.getUser().getUserId()))
+            {
+                li=l1;
+            }
+        }
+        if(li!=null)
+        {
+            likeButton.setBackground(Color.decode("#1877F2"));
+        }
+        else {
+            likeButton.setBackground(Color.decode("#1E1E1E"));
+        }
+        likeButton.setForeground(Color.WHITE);
+        likeButton.setPreferredSize(new Dimension(400, 30));
+        likeButton.setFocusPainted(false);
 
-        textContentPanel.add(contentLabel);
+        commentButton.setBackground(Color.decode("#1E1E1E"));
+        commentButton.setForeground(Color.WHITE);
+        commentButton.setPreferredSize(new Dimension(400, 30));
+        commentButton.setFocusPainted(false);
+        likes1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        likes1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                likesWindow lw=new likesWindow(post);
+            }
+        });
+        likeButton.addActionListener(e -> {
+            like ll = new like(account, post.getContentId());
+            if(likeButton.getBackground().equals(Color.decode("#1E1E1E"))) {
+                likes.add(ll);
+                l.saveLike(post.getContentId(), likes);
+            }
+            else{
+                like lll=null;
+                for(like l2:likes)
+                {
+                    if(l2.getAccount().getUser().getUserId().equals(account.getUser().getUserId()))
+                    {
+                        lll=l2;
+                    }
+                }
+                likes.remove(lll);
+                l.saveLike(post.getContentId(),likes);
+            }
+            showPosts();
+        });
+        commentButton.addActionListener(e -> {
+            commentsWindow c=new commentsWindow(post,account);
+        });
 
-        singlePostPanel.add(textContentPanel, BorderLayout.CENTER);
+        buttonPanel2.add(likeButton);
+        JLabel label2=new JLabel("      ");
+        buttonPanel2.add(label2);
+        buttonPanel2.add(commentButton);
+        buttonPanel.add(buttonPanel2,BorderLayout.SOUTH);
+        // Add components to textContentPanel
+        textContentPanel.add(postautherdata, BorderLayout.NORTH); // Username at the top
+        textContentPanel.add(contentLabel, BorderLayout.CENTER); // Content in the middle
 
         // Ellipsis button (Options)
         JButton optionsButton = new JButton("..."); // Ellipsis for options
@@ -214,9 +288,10 @@ showPosts();
         optionsButton.setPreferredSize(new Dimension(20, 15));
         optionsButton.setFocusPainted(false);
 
-        //create the popup menu
+        // Create the popup menu
         JPopupMenu popupMenu = new JPopupMenu();
-        //Add options
+
+        // Add options
         UserAccount user = null;
         if (group.getOwner().getUser().getUserId().equals(account.getUser().getUserId()) || post.getAuthorId().equals(account.getUser().getUserId())) {
             user = account;
@@ -229,19 +304,19 @@ showPosts();
         if (user != null) {
             JMenuItem editItem = new JMenuItem("Edit");
             editItem.addActionListener(e -> {
-               EditPostWindow a = new EditPostWindow(post,group);
+                EditPostWindow a = new EditPostWindow(post, group);
             });
             popupMenu.add(editItem);
+
             JMenuItem deleteItem = new JMenuItem("Delete");
             deleteItem.addActionListener(e -> {
                 commonRole c = new commonRole();
                 c.deletePost(post, group);
-
             });
             popupMenu.add(deleteItem);
+
             optionsButton.addActionListener(e -> popupMenu.show(optionsButton, optionsButton.getWidth() / 2, optionsButton.getHeight() / 2));
             singlePostPanel.add(optionsButton, BorderLayout.EAST);
-
         }
 
         // Image Section (optional, displayed below the text content)
@@ -253,16 +328,17 @@ showPosts();
             postImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
             // Add the image to the bottom of the singlePostPanel
-            singlePostPanel.add(postImageLabel, BorderLayout.SOUTH);
+            textContentPanel.add(postImageLabel, BorderLayout.SOUTH);
         }
-
+        singlePostPanel.add(textContentPanel,BorderLayout.CENTER);
+        singlePostPanel.add(buttonPanel,BorderLayout.SOUTH);
         // Add the post panel to the main post container (postPanel)
         PostPanel.add(singlePostPanel);
-
         // Refresh the panel to make the new content visible
         PostPanel.revalidate();
         PostPanel.repaint();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
