@@ -21,6 +21,9 @@ public class comments {
         this.commentText = commentText;
     }
 
+    public comments() {
+    }
+
     public UserAccount getAccount() {
         return account;
     }

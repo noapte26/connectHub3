@@ -19,6 +19,10 @@ public class like {
         this.contentId = contentId;
     }
 
+    public like() {
+    }
+    
+
     public UserAccount getAccount() {
         return account;
     }
