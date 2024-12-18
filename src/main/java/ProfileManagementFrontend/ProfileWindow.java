@@ -13,16 +13,28 @@ import ContentCreation.Content;
 import ContentCreation.Post;
 import ContentCreation.Story;
 import ContentCreation.backendContent;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.awt.*;
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayList;
+
+import GroupManagementBackEnd.commonRole;
+import GroupManagementFrontEnd.EditPostWindow;
+import InteractionFrontEnd.commentsWindow;
+import InteractionFrontEnd.likesWindow;
 import ProfileManagementBackend.*;
 import javax.swing.plaf.FileChooserUI;
 
 import UserAccountManagementBackend.User;
 import UserAccountManagementBackend.getUser;
+import interactionsBackEnd.like;
+import interactionsDataBase.likeFileManeger;
+
 import static UserAccountManagementBackend.getUser.getUser;
 
 public class ProfileWindow extends javax.swing.JFrame {
@@ -195,7 +207,7 @@ public class ProfileWindow extends javax.swing.JFrame {
         storyPanel.repaint();
     }
 
-    private void createPostPanel(Post post) {
+    public void createPostPanel(Post post) {
         // Main panel for the post
         JPanel singlePostPanel = new JPanel(new BorderLayout(10, 10)); // Space between components
         singlePostPanel.setBackground(Color.WHITE);
@@ -204,36 +216,103 @@ public class ProfileWindow extends javax.swing.JFrame {
         // Profile Picture
         JLabel profilePictureLabel = new JLabel();
         if (account != null) {
-            ImageIcon profileIcon = new ImageIcon(profile.getProfileImageUrl());
+            ImageIcon profileIcon = new ImageIcon(account.getProfile().getProfileImageUrl());
             Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Adjust profile image size
             profilePictureLabel.setIcon(new ImageIcon(profileImage));
         } else {
             profilePictureLabel.setText("No Image"); // Placeholder text if no profile image
             profilePictureLabel.setHorizontalAlignment(SwingConstants.CENTER);
         }
-        singlePostPanel.add(profilePictureLabel, BorderLayout.WEST);
-
-        // Text Content Panel (Username + Content)
-        JPanel textContentPanel = new JPanel();
-        textContentPanel.setLayout(new BoxLayout(textContentPanel, BoxLayout.Y_AXIS));
+        JPanel postautherdata = new JPanel(new BorderLayout(10, 10));
+        postautherdata.add(profilePictureLabel,BorderLayout.WEST);
+        postautherdata.setBackground(Color.WHITE);
+        // Text Content Panel (Username + Content + Buttons)
+        JPanel textContentPanel = new JPanel(new BorderLayout(10, 10)); // Space between sections
         textContentPanel.setBackground(Color.WHITE);
 
         // Username
         String username = account.getUser().getUserName();
         JLabel usernameLabel = new JLabel(username);
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-
+        postautherdata.add(usernameLabel,BorderLayout.CENTER);
         // Post Content
         String content = (post.getContent() != null && !post.getContent().isEmpty()) ? post.getContent() : "No content available";
         JLabel contentLabel = new JLabel(content);
         contentLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
-        // Add username and content to the text panel
-        textContentPanel.add(usernameLabel);
-        textContentPanel.add(contentLabel);
+        // Like and Comment Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Small gap between buttons
+        //buttonPanel.setBackground(Color.decode("#1E1E1E"));
+        JLabel likes1=new JLabel("likes");
+        likes1.setFont(new Font("Arial", Font.BOLD, 14));
+        buttonPanel.add(likes1,BorderLayout.NORTH);
+        JButton likeButton = new JButton("Like");
+        JButton commentButton = new JButton("Comment");
+        likeFileManeger l=new likeFileManeger("Likes");
+        ArrayList<like>likes=l.loadLike(post.getContentId());
+        JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        like li=null;
+        for(like l1:likes)
+        {
+            if(l1.getAccount().getUser().getUserId().equals(account.getUser().getUserId()))
+            {
+                li=l1;
+            }
+        }
+        if(li!=null)
+        {
+            likeButton.setBackground(Color.decode("#1877F2"));
+        }
+        else {
+            likeButton.setBackground(Color.decode("#1E1E1E"));
+        }
+        likeButton.setForeground(Color.WHITE);
+        likeButton.setPreferredSize(new Dimension(400, 30));
+        likeButton.setFocusPainted(false);
 
-        singlePostPanel.add(textContentPanel, BorderLayout.CENTER);
+        commentButton.setBackground(Color.decode("#1E1E1E"));
+        commentButton.setForeground(Color.WHITE);
+        commentButton.setPreferredSize(new Dimension(400, 30));
+        commentButton.setFocusPainted(false);
+        likes1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        likes1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                likesWindow lw=new likesWindow(post);
+            }
+        });
+        likeButton.addActionListener(e -> {
+            like ll = new like(account, post.getContentId());
+            if(likeButton.getBackground().equals(Color.decode("#1E1E1E"))) {
+                likes.add(ll);
+                l.saveLike(post.getContentId(), likes);
+            }
+            else{
+                like lll=null;
+                for(like l2:likes)
+                {
+                    if(l2.getAccount().getUser().getUserId().equals(account.getUser().getUserId()))
+                    {
+                        lll=l2;
+                    }
+                }
+                likes.remove(lll);
+                l.saveLike(post.getContentId(),likes);
+            }
+            showPosts();
+        });
+        commentButton.addActionListener(e -> {
+            commentsWindow c=new commentsWindow(post,account);
+        });
 
+        buttonPanel2.add(likeButton);
+        JLabel label2=new JLabel("      ");
+        buttonPanel2.add(label2);
+        buttonPanel2.add(commentButton);
+        buttonPanel.add(buttonPanel2,BorderLayout.SOUTH);
+        // Add components to textContentPanel
+        textContentPanel.add(postautherdata, BorderLayout.NORTH); // Username at the top
+        textContentPanel.add(contentLabel, BorderLayout.CENTER); // Content in the middle
         // Image Section (optional, displayed below the text content)
         if (post.getImagePath() != null) {
             JLabel postImageLabel = new JLabel();
@@ -243,12 +322,12 @@ public class ProfileWindow extends javax.swing.JFrame {
             postImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
             // Add the image to the bottom of the singlePostPanel
-            singlePostPanel.add(postImageLabel, BorderLayout.SOUTH);
+            textContentPanel.add(postImageLabel, BorderLayout.SOUTH);
         }
-
+        singlePostPanel.add(textContentPanel,BorderLayout.CENTER);
+        singlePostPanel.add(buttonPanel,BorderLayout.SOUTH);
         // Add the post panel to the main post container (postPanel)
         postPanel.add(singlePostPanel);
-
         // Refresh the panel to make the new content visible
         postPanel.revalidate();
         postPanel.repaint();
