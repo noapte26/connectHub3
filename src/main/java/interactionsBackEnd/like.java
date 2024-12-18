@@ -4,10 +4,28 @@
  */
 package interactionsBackEnd;
 
+import Account.UserAccount;
+
 /**
  *
  * @author CONNECT
  */
 public class like {
+    private UserAccount account ;
+    private String contentId ;
+
+    public like(UserAccount account, String contentId) {
+        this.account = account;
+        this.contentId = contentId;
+    }
+
+    public UserAccount getAccount() {
+        return account;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+    
     
 }
