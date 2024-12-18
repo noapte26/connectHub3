@@ -13,6 +13,7 @@ import GroupManagementBackEnd.Group;
 import GroupManagementBackEnd.commonRole;
 import GroupManagementFrontEnd.CreateGroupWindow;
 import GroupManagementFrontEnd.GroupWindow;
+import ProfileManagementFrontend.ProfileWindow;
 import SearchEngineBackend.SearchEngine;
 import groupDataBase.MembersFileManager;
 import java.awt.BorderLayout;
@@ -210,8 +211,14 @@ public class SearchEngineFrontend extends javax.swing.JFrame {
                     repaint();
                 });
 
+                JMenuItem viewItem = new JMenuItem("View profile");
+                viewItem.addActionListener( event-> {
+                    ProfileWindow p=new ProfileWindow(user.getProfile(),user);
+                });
+
                 popupMenu.add(blockItem);
                 popupMenu.add(removeItem);
+                popupMenu.add(viewItem);
                 break; // Exit the loop once the user is found as a friend
             }
         }
