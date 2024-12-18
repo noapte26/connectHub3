@@ -1,13 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package ChatSystemBackend;
+package chatsBackEnd;
 
-/**
- *
- * @author gg
- */
+import Account.UserAccount;
+
 public class TheBuilder {
-    
+    private String chatId;
+    private UserAccount sender;
+    private String messageText = ""; // Default value
+    private String imagePath = ""; // Default value
+
+    public TheBuilder(String chatId, UserAccount sender) {
+        this.chatId = chatId;
+        this.sender = sender;
+    }
+
+    public TheBuilder setMessageText(String messageText) {
+        this.messageText = messageText;
+        return this;
+    }
+
+    public TheBuilder setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+        return this;
+    }
+
+    public Message build() { // Ensure "Message" matches your class name
+        return new Message(chatId, sender, messageText, imagePath);
+    }
 }
