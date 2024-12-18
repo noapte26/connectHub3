@@ -1,5 +1,4 @@
-package chatsBackEnd;
-
+package ChatSystemBackend;
 import Account.UserAccount;
 
 public class TheBuilder {

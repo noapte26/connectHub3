@@ -53,9 +53,9 @@ public class ChatFileManager {
                 }
 
             
-            for (Chat post : Chats)
+            for (Chat chat : Chats)
             {
-                String profileJson = objectMapper.writeValueAsString(post);
+                String profileJson = objectMapper.writeValueAsString(chat);
                 writer.write(profileJson);
                 writer.newLine(); // Add a newline after each JSON object
             }

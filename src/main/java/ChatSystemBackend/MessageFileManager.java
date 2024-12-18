@@ -33,9 +33,10 @@ public class MessageFileManager {
     }
     // Generate a JSON file path for a user's friend list using their user ID
     public String generateFriendListFilePath(String senderId) {
-        return baseDirectory + File.separator + "group_" + senderId + "_"+this.type+".json";
+        return baseDirectory + File.separator + "message_" + senderId + "_"+this.type+".json";
     }
-    public void savePosts(String senderId, ArrayList<Message> Messages) {
+    
+    public void saveMessage(String senderId, ArrayList<Message> Messages) {
         String filePath = generateFriendListFilePath(senderId);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,26 +65,26 @@ public class MessageFileManager {
 
     }
     // Load the Messages for a specific chat
-    public ArrayList<Chat> loadMessages(String chatId) {
+    public ArrayList<Message> loadMessages(String chatId) {
 
         String filePath = generateFriendListFilePath(chatId);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        ArrayList<Chat> chats = new ArrayList<>();
+        ArrayList<Message> messages = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                Chat chat = objectMapper.readValue(line, Chat.class);
-                chats.add(chat);
+                Message message = objectMapper.readValue(line, Message.class);
+                messages.add(message);
             }
         } catch (IOException e) {
             System.err.println("Error reading accounts from file: " + e.getMessage());
             throw new RuntimeException("Failed to load accounts", e);
         }
         finally {
-            return chats;
+            return messages;
         }
 
     }
