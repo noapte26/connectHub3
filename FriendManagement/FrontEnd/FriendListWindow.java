@@ -3,14 +3,15 @@ package FriendManagement.FrontEnd;
 
 import Account.*;
 import FriendMangement.BackEnd.*;
+import ProfileManagementFrontend.ProfileWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class FriendListWindow extends JFrame {
 
-    HashSet<UserAccount> accounts;
+    ArrayList<UserAccount> accounts;
     private UserAccount Account;
     FriendListFileManager fileManager;
 
@@ -117,6 +118,12 @@ public class FriendListWindow extends JFrame {
             buttonPanel.add(removed);
         });
         popupMenu.add(removeItem);
+
+        JMenuItem viewItem = new JMenuItem("View profile");
+        viewItem.addActionListener(e -> {
+            ProfileWindow p=new ProfileWindow(user.getProfile(),user);
+        });
+        popupMenu.add(viewItem);
 
         optionsButton.addActionListener(e -> popupMenu.show(optionsButton, optionsButton.getWidth() / 2, optionsButton.getHeight() / 2));
         buttonPanel.add(optionsButton);
