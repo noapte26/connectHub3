@@ -109,11 +109,7 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                     // Update the counter label on the Swing UI thread
                     SwingUtilities.invokeLater(() -> counter.setText(countText));
                     
-                    Notification newNotification = notifications.get(currentCount - 1);
-                    UserAccount u  = GetAccount.getAccount(newNotification.getActionId());
-                   // SwingUtilities.invokeLater(() -> {
-               //JOptionPane.showMessageDialog(null, "New notification: " + newNotification.getType()+":"+u.getUser().getUserName(), "Notification", JOptionPane.INFORMATION_MESSAGE);
-                 //   });
+                
                 }
 
                 // Sleep for 5 seconds before checking again
@@ -713,10 +709,11 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
                             .addComponent(refresh))
-                        .addGap(30, 30, 30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jButton1)))
+                            .addComponent(jButton1)
+                            .addComponent(jLabel9))
+                        .addGap(18, 18, 18))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
