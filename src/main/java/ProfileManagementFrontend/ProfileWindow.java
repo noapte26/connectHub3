@@ -8,6 +8,7 @@ package ProfileManagementFrontend;
  *
  * @author hebai
  */
+import Account.GetAccount;
 import Account.UserAccount;
 import ContentCreation.Content;
 import ContentCreation.Post;
@@ -27,6 +28,8 @@ import GroupManagementBackEnd.commonRole;
 import GroupManagementFrontEnd.EditPostWindow;
 import InteractionFrontEnd.commentsWindow;
 import InteractionFrontEnd.likesWindow;
+import NotificationsBackend.Notification;
+import NotificationsBackend.NotificationFileManager;
 import ProfileManagementBackend.*;
 import javax.swing.plaf.FileChooserUI;
 
@@ -300,6 +303,11 @@ public class ProfileWindow extends javax.swing.JFrame {
                 l.saveLike(post.getContentId(),likes);
             }
             showPosts();
+             NotificationFileManager notificationFileManager = new NotificationFileManager();
+            UserAccount postOwner = GetAccount.getAccount(post.getAuthorId());
+            String type = "Post Like";
+            Notification notification = new Notification(type, postOwner.getUser().getUserId(), authorId , post, null);
+            notificationFileManager.addNotification(postOwner.getUser().getUserId(), notification);
         });
         commentButton.addActionListener(e -> {
             commentsWindow c=new commentsWindow(post,account);

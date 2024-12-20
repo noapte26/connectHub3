@@ -111,9 +111,9 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                     
                     Notification newNotification = notifications.get(currentCount - 1);
                     UserAccount u  = GetAccount.getAccount(newNotification.getActionId());
-                    SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(null, "New notification: " + newNotification.getType()+":"+u.getUser().getUserName(), "Notification", JOptionPane.INFORMATION_MESSAGE);
-                    });
+                   // SwingUtilities.invokeLater(() -> {
+               //JOptionPane.showMessageDialog(null, "New notification: " + newNotification.getType()+":"+u.getUser().getUserName(), "Notification", JOptionPane.INFORMATION_MESSAGE);
+                 //   });
                 }
 
                 // Sleep for 5 seconds before checking again
@@ -344,6 +344,11 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                 l.saveLike(post.getContentId(), likes);
             }
             showPosts();
+             NotificationFileManager notificationFileManager = new NotificationFileManager();
+            UserAccount postOwner = GetAccount.getAccount(post.getAuthorId());
+            String type = "Post Like";
+            Notification notification = new Notification(type, postOwner.getUser().getUserId(), authorId , post, null);
+            notificationFileManager.addNotification(postOwner.getUser().getUserId(), notification);
         });
         commentButton.addActionListener(e -> {
             commentsWindow c = new commentsWindow(post, getAcc(authorId));
