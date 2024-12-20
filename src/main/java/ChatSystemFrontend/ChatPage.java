@@ -80,8 +80,48 @@ public class ChatPage extends javax.swing.JFrame {
         setTitle("Messenger");
         setVisible(true);
         this.setLocationRelativeTo(null);
+        startChatThread();
     }
+  private void startChatThread() {
+        Thread chatThread = new Thread(() -> {
 
+            int previousCount = 0; // Keep track of the last notification count
+
+            while (true) {
+                try {
+                    // Load the Messages list
+                    MessageFileManager messageFileManager = new MessageFileManager();
+                    ArrayList<Message> messages = messageFileManager.loadMessage(chatId);
+
+                    // Ensure the list is not null
+                    if (messages == null) {
+                        messages = new ArrayList<>();
+                    }
+
+                    // Get the current notification count
+                    int currentCount = messages.size();
+
+                    // Update the counter if the count has changed
+                    if (currentCount != previousCount) {
+                        previousCount = currentCount;
+                        String countText = String.valueOf(currentCount);
+
+                        displayMessages();
+                    }
+                    // Sleep for 5 seconds before checking again
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    System.err.println("Notification thread interrupted: " + e.getMessage());
+                    break; // Exit the loop if interrupted
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        chatThread.setDaemon(true); // Make the thread a daemon thread
+        chatThread.start();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
