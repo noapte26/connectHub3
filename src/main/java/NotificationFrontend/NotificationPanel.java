@@ -5,6 +5,7 @@ import Account.UserAccount;
 import Account.GetAccount;
 import NotificationsBackend.Notification;
 import NotificationsBackend.NotificationFileManager;
+import NotificationsBackend.NotificationExtension;
 import FriendMangement.BackEnd.FriendRequestFileManager;
 import GroupManagementBackEnd.Group;
 import GroupManagementFrontEnd.GroupWindow;
@@ -13,6 +14,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.*;
+import InteractionFrontEnd.commentsWindow;
+import ChatSystemFrontend.ChatPage;
 
 public class NotificationPanel extends JFrame {
     private NotificationFileManager notificationManager;
@@ -93,7 +96,7 @@ public class NotificationPanel extends JFrame {
         messageLabel.setForeground(Color.WHITE);
         panel.add(messageLabel, BorderLayout.CENTER);
         }
-        else 
+        else if(notification.getType().equals("Joined Group"))
         {  groupLoad a = new groupLoad();
            HashSet <Group> groups = a.loadGroups();
            Group group = null;
@@ -161,6 +164,45 @@ public class NotificationPanel extends JFrame {
                     }
                 });
                 buttonPanel.add(viewGroupButton);
+                break;
+            
+            case "Chat":
+                UserAccount messageSender = GetAccount.getAccount(notification.getActionId());
+                JLabel messageLabel2 = new JLabel(notification.getType() + ": " +messageSender.getUser().getUserName());
+                messageLabel2.setForeground(Color.WHITE);
+                panel.add(messageLabel2, BorderLayout.CENTER);
+                JButton viewMessageButton = new JButton("View Message");
+                viewMessageButton.addActionListener(e -> {
+                    // Open chat window 
+                   UserAccount messageReciever = GetAccount.getAccount(notification.getRecipientId());
+                   if(messageReciever != null){
+                       ChatPage c = new ChatPage(messageReciever, messageSender, notification.getCharId());
+                   }
+                   
+                });
+                buttonPanel.add(viewMessageButton);
+                break;
+            case "Post Comment":
+              
+                        System.out.println("Iam in the post notification now");
+                        UserAccount commentOwner = GetAccount.getAccount(notification.getActionId());
+                        JLabel messageLabel = new JLabel(notification.getType() + ": " +commentOwner.getUser().getUserName());
+                        messageLabel.setForeground(Color.WHITE);
+                        panel.add(messageLabel, BorderLayout.CENTER);
+                        JButton viewPostButton = new JButton("View Post");
+                        viewPostButton.addActionListener(e -> {
+                        // Open post view logic
+
+                         UserAccount userAccount = GetAccount.getAccount(notification.getRecipientId());
+                         if(userAccount != null){
+                         commentsWindow cm = new commentsWindow(notification.getPost(), userAccount);
+                        
+                     }
+                   
+                });
+                         buttonPanel.add(viewPostButton);
+                        
+                
                 break;
 
             default:

@@ -5,11 +5,14 @@
 package ChatSystemFrontend;
 
 import Account.AccountLoad;
+import Account.GetAccount;
 import Account.UserAccount;
 import ChatSystemBackend.ChatFileManager;
 import ChatSystemBackend.Message;
 import ChatSystemBackend.MessageFileManager;
 import ChatSystemBackend.TheBuilder;
+import NotificationsBackend.Notification;
+import NotificationsBackend.NotificationFileManager;
 import groupDataBase.MembersFileManager;
 
 import java.awt.*;
@@ -217,6 +220,14 @@ public class ChatPage extends javax.swing.JFrame {
         messageFileManager.saveMessage(chatId, messages);
         input.setText("");
         displayMessages();
+        
+        NotificationFileManager notificationFileManager = new NotificationFileManager();
+       
+        String type = "Chat";
+        Notification notification = new Notification(type,this.him.getUser().getUserId(), this.me.getUser().getUserId(), null, this.chatId);
+        notificationFileManager.addNotification(this.him.getUser().getUserId(), notification);
+        
+        
     }//GEN-LAST:event_sendActionPerformed
 
     private void uploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadActionPerformed

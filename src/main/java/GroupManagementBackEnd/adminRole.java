@@ -56,7 +56,7 @@ public class adminRole extends commonRole {
         membersFileManagermember.saveMembers(g.getGroupId(), members);
         membersFileManagerrequests.saveMembers(g.getGroupId(), requests);
         NotificationFileManager notificationManager = new NotificationFileManager();
-        Notification notification = new Notification("Joined Group", member.getUser().getUserId(), g.getGroupId());
+        Notification notification = new Notification("Joined Group", member.getUser().getUserId(), g.getGroupId(), null, null);
         notificationManager.addNotification(member.getUser().getUserId(), notification);
 
     }
@@ -93,7 +93,7 @@ public class adminRole extends commonRole {
         ArrayList<UserAccount> members = membersFileManager.loadMembers(g.getGroupId());
         NotificationFileManager notificationManager = new NotificationFileManager();
         for (UserAccount u : members) {
-            Notification notification = new Notification("New Group Post", u.getUser().getUserId(), g.getGroupId());
+            Notification notification = new Notification("New Group Post", u.getUser().getUserId(), g.getGroupId(), null, null);
             notificationManager.addNotification(u.getUser().getUserId(), notification);
         }
     }

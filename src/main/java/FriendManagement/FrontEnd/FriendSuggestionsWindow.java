@@ -98,7 +98,7 @@ public class FriendSuggestionsWindow extends JFrame {
         addButton.addActionListener(e -> {
             System.out.println("nada hates you");
             NotificationFileManager nManager = new NotificationFileManager();
-            Notification n = new Notification("Friend Request", user.getUser().getUserId(), Account.getUser().getUserId());
+            Notification n = new Notification("Friend Request", user.getUser().getUserId(), Account.getUser().getUserId(), null, null);
             nManager.addNotification(user.getUser().getUserId(), n);
             fileManager.addFriend(Account, user);            
             buttonPanel.removeAll();
