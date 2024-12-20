@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import Account.AccountLoad;
 import Account.UpdateAccount;
 import Account.UserAccount;
+import Account.GetAccount;
 import ChatSystemFrontend.UserChatsWindow;
 import InteractionFrontEnd.commentsWindow;
 import ContentCreation.Content;
@@ -77,8 +78,59 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         // Show stories
         showStories();
         showPosts();
+        startNotificationThread();
 
     }
+    
+    
+    private void startNotificationThread() {
+    Thread notificationThread = new Thread(() -> {
+        NotificationFileManager notificationManager = new NotificationFileManager();
+        int previousCount = 0; // Keep track of the last notification count
+
+        while (true) {
+            try {
+                // Load the notification list
+                ArrayList<Notification> notifications = notificationManager.loadNotificationList(authorId);
+
+                // Ensure the list is not null
+                if (notifications == null) {
+                    notifications = new ArrayList<>();
+                }
+
+                // Get the current notification count
+                int currentCount = notifications.size();
+
+                // Update the counter if the count has changed
+                if (currentCount != previousCount) {
+                    previousCount = currentCount;
+                    String countText = String.valueOf(currentCount);
+
+                    // Update the counter label on the Swing UI thread
+                    SwingUtilities.invokeLater(() -> counter.setText(countText));
+                    
+                    Notification newNotification = notifications.get(currentCount - 1);
+                    UserAccount u  = GetAccount.getAccount(newNotification.getActionId());
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(null, "New notification: " + newNotification.getType()+":"+u.getUser().getUserName(), "Notification", JOptionPane.INFORMATION_MESSAGE);
+                    });
+                }
+
+                // Sleep for 5 seconds before checking again
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                System.err.println("Notification thread interrupted: " + e.getMessage());
+                break; // Exit the loop if interrupted
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
+    notificationThread.setDaemon(true); // Make the thread a daemon thread
+    notificationThread.start();
+}
+    
 
     public String getname(String authorId) {
         String name;
@@ -849,10 +901,17 @@ public class NewsFeedWindow extends javax.swing.JFrame {
     private void NotificationsButton(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NotificationsButton
         UserAccount account = getAcc(authorId);
         NotificationFileManager manager = new NotificationFileManager();
+
+        // Open the notification panel
         NotificationPanel panel = new NotificationPanel(account, manager);
         panel.setVisible(true);
+
+        // Clear notifications after viewing
         ArrayList<Notification> notifications = new ArrayList<>();
         manager.saveNotificationList(authorId, notifications);
+
+        // Update the counter to 0 after clearing notifications
+        SwingUtilities.invokeLater(() -> counter.setText("0"));
     }//GEN-LAST:event_NotificationsButton
 
     private void chatsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chatsMousePressed

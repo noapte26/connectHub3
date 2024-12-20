@@ -26,10 +26,12 @@ import java.util.ArrayList;
 public class NotificationFileManager {
     private  String baseDirectory;
     private  ObjectMapper objectMapper;
+    
 
     public NotificationFileManager() {
         this.baseDirectory = "notifications_lists";
         this.objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         createBaseDirectory(); // Ensure the base directory exists
     }
 
@@ -68,7 +70,7 @@ public class NotificationFileManager {
     public void saveNotificationList(String userId, ArrayList<Notification> notifications) {
         String filePath = generateNotificationListFilePath(userId);
          
-        ObjectMapper objectMapper = new ObjectMapper();
+    
    
         File file =new File(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))){
@@ -82,7 +84,7 @@ public class NotificationFileManager {
             
             for (Notification notification :notifications)
             {
-                String notificationJson = objectMapper.writeValueAsString(notification);
+                String notificationJson = this.objectMapper.writeValueAsString(notification);
                 writer.write(notificationJson);
                 writer.newLine(); // Add a newline after each JSON object
             }

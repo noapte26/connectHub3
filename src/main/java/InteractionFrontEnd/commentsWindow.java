@@ -4,11 +4,14 @@
  */
 package InteractionFrontEnd;
 
+import Account.GetAccount;
 import Account.UserAccount;
 import ContentCreation.Content;
 import ContentCreation.Post;
 import GroupManagementBackEnd.commonRole;
 import GroupManagementFrontEnd.EditPostWindow;
+import NotificationsBackend.Notification;
+import NotificationsBackend.NotificationFileManager;
 import interactionsBackEnd.comments;
 import interactionsDataBase.commentFileManeger;
 
@@ -230,6 +233,13 @@ public class commentsWindow extends javax.swing.JFrame {
         comments.add(c);
         commentfileManager.saveComment(post.getContentId(),comments);
         jTextField1.setText("");
+        
+        NotificationFileManager notificationFileManager = new NotificationFileManager();
+        UserAccount postOwner = GetAccount.getAccount(post.getAuthorId());
+        String type = "Post Comment";
+        Notification notification = new Notification(type, postOwner.getUser().getUserId(), account.getUser().getUserId(), post, null);
+        notificationFileManager.addNotification(postOwner.getUser().getUserId(), notification);
+        
         showcomments();
     }//GEN-LAST:event_sendcommentActionPerformed
 
