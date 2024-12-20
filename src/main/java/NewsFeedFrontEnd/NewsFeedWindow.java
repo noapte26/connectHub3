@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import Account.AccountLoad;
 import Account.UpdateAccount;
 import Account.UserAccount;
+import ChatSystemFrontend.UserChatsWindow;
 import InteractionFrontEnd.commentsWindow;
 import ContentCreation.Content;
 import ContentCreation.Post;
@@ -37,7 +38,6 @@ import static UserAccountManagementBackend.getUser.getUser;
 import UserAccountManagementFrontend.LoginWindpw;
 import interactionsBackEnd.like;
 import interactionsDataBase.likeFileManeger;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -223,7 +223,7 @@ public class NewsFeedWindow extends javax.swing.JFrame {
             profilePictureLabel.setHorizontalAlignment(SwingConstants.CENTER);
         }
         JPanel postautherdata = new JPanel(new BorderLayout(10, 10));
-        postautherdata.add(profilePictureLabel,BorderLayout.WEST);
+        postautherdata.add(profilePictureLabel, BorderLayout.WEST);
         postautherdata.setBackground(Color.WHITE);
         // Text Content Panel (Username + Content + Buttons)
         JPanel textContentPanel = new JPanel(new BorderLayout(10, 10)); // Space between sections
@@ -233,7 +233,7 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         String username = getAcc(post.getAuthorId()).getUser().getUserName();
         JLabel usernameLabel = new JLabel(username);
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        postautherdata.add(usernameLabel,BorderLayout.CENTER);
+        postautherdata.add(usernameLabel, BorderLayout.CENTER);
         // Post Content
         String content = (post.getContent() != null && !post.getContent().isEmpty()) ? post.getContent() : "No content available";
         JLabel contentLabel = new JLabel(content);
@@ -242,27 +242,23 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         // Like and Comment Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Small gap between buttons
         //buttonPanel.setBackground(Color.decode("#1E1E1E"));
-        JLabel likes1=new JLabel("likes");
+        JLabel likes1 = new JLabel("likes");
         likes1.setFont(new Font("Arial", Font.BOLD, 14));
-        buttonPanel.add(likes1,BorderLayout.NORTH);
+        buttonPanel.add(likes1, BorderLayout.NORTH);
         JButton likeButton = new JButton("Like");
         JButton commentButton = new JButton("Comment");
-        likeFileManeger l=new likeFileManeger("Likes");
-        ArrayList<like>likes=l.loadLike(post.getContentId());
+        likeFileManeger l = new likeFileManeger("Likes");
+        ArrayList<like> likes = l.loadLike(post.getContentId());
         JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        like li=null;
-        for(like l1:likes)
-        {
-            if(l1.getAccount().getUser().getUserId().equals(getAcc(authorId).getUser().getUserId()))
-            {
-                li=l1;
+        like li = null;
+        for (like l1 : likes) {
+            if (l1.getAccount().getUser().getUserId().equals(getAcc(authorId).getUser().getUserId())) {
+                li = l1;
             }
         }
-        if(li!=null)
-        {
+        if (li != null) {
             likeButton.setBackground(Color.decode("#1877F2"));
-        }
-        else {
+        } else {
             likeButton.setBackground(Color.decode("#1E1E1E"));
         }
         likeButton.setForeground(Color.WHITE);
@@ -277,42 +273,38 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         likes1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                likesWindow lw=new likesWindow(post);
+                likesWindow lw = new likesWindow(post);
             }
         });
         likeButton.addActionListener(e -> {
             like ll = new like(getAcc(authorId), post.getContentId());
-            if(likeButton.getBackground().equals(Color.decode("#1E1E1E"))) {
+            if (likeButton.getBackground().equals(Color.decode("#1E1E1E"))) {
                 likes.add(ll);
                 l.saveLike(post.getContentId(), likes);
-            }
-            else{
-                like lll=null;
-                for(like l2:likes)
-                {
-                    if(l2.getAccount().getUser().getUserId().equals(getAcc(authorId).getUser().getUserId()))
-                    {
-                        lll=l2;
+            } else {
+                like lll = null;
+                for (like l2 : likes) {
+                    if (l2.getAccount().getUser().getUserId().equals(getAcc(authorId).getUser().getUserId())) {
+                        lll = l2;
                     }
                 }
                 likes.remove(lll);
-                l.saveLike(post.getContentId(),likes);
+                l.saveLike(post.getContentId(), likes);
             }
             showPosts();
         });
         commentButton.addActionListener(e -> {
-            commentsWindow c=new commentsWindow(post,getAcc(authorId));
+            commentsWindow c = new commentsWindow(post, getAcc(authorId));
         });
 
         buttonPanel2.add(likeButton);
-        JLabel label2=new JLabel("      ");
+        JLabel label2 = new JLabel("      ");
         buttonPanel2.add(label2);
         buttonPanel2.add(commentButton);
-        buttonPanel.add(buttonPanel2,BorderLayout.SOUTH);
+        buttonPanel.add(buttonPanel2, BorderLayout.SOUTH);
         // Add components to textContentPanel
         textContentPanel.add(postautherdata, BorderLayout.NORTH); // Username at the top
         textContentPanel.add(contentLabel, BorderLayout.CENTER); // Content in the middle
-
 
         // Image Section (optional, displayed below the text content)
         if (post.getImagePath() != null) {
@@ -325,8 +317,8 @@ public class NewsFeedWindow extends javax.swing.JFrame {
             // Add the image to the bottom of the singlePostPanel
             textContentPanel.add(postImageLabel, BorderLayout.SOUTH);
         }
-        singlePostPanel.add(textContentPanel,BorderLayout.CENTER);
-        singlePostPanel.add(buttonPanel,BorderLayout.SOUTH);
+        singlePostPanel.add(textContentPanel, BorderLayout.CENTER);
+        singlePostPanel.add(buttonPanel, BorderLayout.SOUTH);
         // Add the post panel to the main post container (postPanel)
         postPanel.add(singlePostPanel);
         // Refresh the panel to make the new content visible
@@ -357,6 +349,8 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         counter = new javax.swing.JLabel();
+        chats = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         Story = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -463,6 +457,16 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         counter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         counter.setForeground(new java.awt.Color(255, 51, 51));
 
+        chats.setIcon(new javax.swing.ImageIcon(getClass().getResource("/chat.png"))); // NOI18N
+        chats.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                chatsMousePressed(evt);
+            }
+        });
+
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel19.setText("Chats");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -482,20 +486,24 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 351, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel17)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel17))
-                .addGap(66, 66, 66)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel2)
                         .addGap(12, 12, 12))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(chats, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(suggests)
                         .addGap(63, 63, 63)
                         .addComponent(block)
@@ -533,7 +541,9 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chats)
+                            .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -545,7 +555,9 @@ public class NewsFeedWindow extends javax.swing.JFrame {
                         .addComponent(jLabel11)
                         .addComponent(jLabel15)
                         .addComponent(jLabel13))
-                    .addComponent(jLabel17))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel17)
+                        .addComponent(jLabel19)))
                 .addGap(150, 150, 150))
         );
 
@@ -765,7 +777,6 @@ public class NewsFeedWindow extends javax.swing.JFrame {
         counter.setText(number);
 
 
-
     }//GEN-LAST:event_refreshActionPerformed
 
     private void RequestMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RequestMousePressed
@@ -836,13 +847,18 @@ public class NewsFeedWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel14MousePressed
 
     private void NotificationsButton(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NotificationsButton
-      UserAccount account = getAcc(authorId);
-       NotificationFileManager manager = new NotificationFileManager();
-       NotificationPanel panel=new NotificationPanel(account,manager);
-       panel.setVisible(true);
-       ArrayList<Notification> notifications = new ArrayList<>();
-       manager.saveNotificationList(authorId, notifications);
+        UserAccount account = getAcc(authorId);
+        NotificationFileManager manager = new NotificationFileManager();
+        NotificationPanel panel = new NotificationPanel(account, manager);
+        panel.setVisible(true);
+        ArrayList<Notification> notifications = new ArrayList<>();
+        manager.saveNotificationList(authorId, notifications);
     }//GEN-LAST:event_NotificationsButton
+
+    private void chatsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chatsMousePressed
+
+         UserChatsWindow a = new UserChatsWindow (getAcc(authorId))   ;     
+    }//GEN-LAST:event_chatsMousePressed
 
     /**
      * @param args the command line arguments
@@ -884,6 +900,7 @@ public class NewsFeedWindow extends javax.swing.JFrame {
     private javax.swing.JLabel Request;
     private javax.swing.JLabel Story;
     private javax.swing.JLabel block;
+    private javax.swing.JLabel chats;
     private javax.swing.JLabel counter;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -897,6 +914,7 @@ public class NewsFeedWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
