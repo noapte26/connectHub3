@@ -82,6 +82,11 @@ public class commentsWindow extends javax.swing.JFrame {
         jTextField1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jTextField1.setForeground(new java.awt.Color(51, 51, 51));
         jTextField1.setText("Add comment");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTextField1MousePressed(evt);
+            }
+        });
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -215,7 +220,7 @@ public class commentsWindow extends javax.swing.JFrame {
         commentsPanel.repaint();
     }
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void sendcommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendcommentActionPerformed
@@ -224,8 +229,13 @@ public class commentsWindow extends javax.swing.JFrame {
         ArrayList<comments>comments=commentfileManager.loadComment(post.getContentId());
         comments.add(c);
         commentfileManager.saveComment(post.getContentId(),comments);
+        jTextField1.setText("");
         showcomments();
     }//GEN-LAST:event_sendcommentActionPerformed
+
+    private void jTextField1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MousePressed
+        jTextField1.setText("");
+    }//GEN-LAST:event_jTextField1MousePressed
 
     /**
      * @param args the command line arguments
