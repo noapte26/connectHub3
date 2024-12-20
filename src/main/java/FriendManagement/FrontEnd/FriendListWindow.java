@@ -2,6 +2,9 @@ package FriendManagement.FrontEnd;
 //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa i'm gonna kill my self
 
 import Account.*;
+import ChatSystemBackend.Chat;
+import ChatSystemBackend.ChatFileManager;
+import ChatSystemFrontend.ChatPage;
 import FriendMangement.BackEnd.*;
 import ProfileManagementFrontend.ProfileWindow;
 
@@ -16,7 +19,6 @@ public class FriendListWindow extends JFrame {
     FriendListFileManager fileManager;
 
     public FriendListWindow(UserAccount Account) {
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         accounts = new AccountLoad().loadAccounts();
         this.Account = Account;
         fileManager = new FriendListFileManager();
@@ -124,6 +126,41 @@ public class FriendListWindow extends JFrame {
             ProfileWindow p=new ProfileWindow(user.getProfile(),user);
         });
         popupMenu.add(viewItem);
+
+        JMenuItem chatItem = new JMenuItem("Send Message");
+        chatItem.addActionListener(e -> {
+            ChatFileManager chatFileManeger = new ChatFileManager ("Chats_List","Chat");
+            ArrayList <Chat> chats = chatFileManeger.loadChats(Account.getUser().getUserId());
+            int k = 0 ;
+            for (Chat chat :chats)
+            {
+                if (chat.getUser1().getUser().getUserId().equals(user.getUser().getUserId())||chat.getUser2().getUser().getUserId().equals(user.getUser().getUserId()))
+                {
+                    ChatPage a = new ChatPage(Account,user,chat.getChatId());
+                    k=1;
+                }
+
+            }
+            if (k==0)
+            {
+                Chat chat = new Chat (Account,user);
+                ChatPage a = new ChatPage(Account,user,chat.getChatId());
+                ArrayList <Chat> accountChats = chatFileManeger.loadChats(Account.getUser().getUserId());
+                ArrayList <Chat> userChats = chatFileManeger.loadChats(user.getUser().getUserId());
+                accountChats.add(chat);
+                userChats.add((chat));
+                chatFileManeger.saveChats(Account.getUser().getUserId(),accountChats);
+                chatFileManeger.saveChats(user.getUser().getUserId(),userChats);
+
+            }
+
+
+
+
+        });
+        popupMenu.add(chatItem);
+
+
 
         optionsButton.addActionListener(e -> popupMenu.show(optionsButton, optionsButton.getWidth() / 2, optionsButton.getHeight() / 2));
         buttonPanel.add(optionsButton);

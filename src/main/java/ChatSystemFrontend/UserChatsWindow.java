@@ -25,6 +25,7 @@ public class UserChatsWindow extends JFrame {
     ChatFileManager fileManager;
 
     public UserChatsWindow(UserAccount Account) {
+        setVisible(true);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.Account = Account;
         fileManager = new ChatFileManager("Chats_List","Chat");

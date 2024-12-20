@@ -2,32 +2,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ChatSystemBackend;
+package interactionsDataBase;
 
-/**
- *
- * @author gg
- */
-import Account.UserAccount;
-import ContentCreation.Post;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import interactionsBackEnd.comments;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class ChatFileManager {
-    private  String baseDirectory;
+public class commentFileManeger {
+
+    private String baseDirectory;
     private ObjectMapper objectMapper;
     private String type;
-    public ChatFileManager(String baseDirectory, String type)
-    {
-        this.type=type;
+
+    public commentFileManeger(String baseDirectory) {
+        this.type = "comments";
         this.baseDirectory = baseDirectory;
         this.objectMapper = new ObjectMapper();
-        createBaseDirectory(); // Ensure the base directory exists
+        createBaseDirectory(); // Ensure the base directory exists    }
+
     }
-    // Create the base directory if it doesn't exist
+       // Create the base directory if it doesn't exist
     private void createBaseDirectory() {
         File dir = new File(baseDirectory);
         if (!dir.exists()) {
@@ -35,11 +32,11 @@ public class ChatFileManager {
         }
     }
     // Generate a JSON file path for a user's friend list using their user ID
-    public String generateFriendListFilePath(String chatId) {
-        return baseDirectory + File.separator + "Chat_" + chatId + "_"+this.type+".json";
+    public String generateContentLikesListFilePath(String contentId) {
+        return baseDirectory + File.separator + "Content_" + contentId + "_"+this.type+".json";
     }
-    public void saveChats(String chatId, ArrayList<Chat> Chats) {
-        String filePath = generateFriendListFilePath(chatId);
+    public void saveComment(String contentId, ArrayList<comments> comments) {
+        String filePath = generateContentLikesListFilePath(contentId);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
@@ -53,9 +50,9 @@ public class ChatFileManager {
                 }
 
             
-            for (Chat chat : Chats)
+            for (comments comment : comments)
             {
-                String profileJson = objectMapper.writeValueAsString(chat);
+                String profileJson = objectMapper.writeValueAsString(comment);
                 writer.write(profileJson);
                 writer.newLine(); // Add a newline after each JSON object
             }
@@ -66,29 +63,31 @@ public class ChatFileManager {
 
 
     }
-    // Load the Chat list for a specific chat
-    public ArrayList<Chat> loadChats(String chatId) {
+    // Load the friend list for a specific user
+    public ArrayList<comments> loadComment(String conteentId) {
 
-        String filePath = generateFriendListFilePath(chatId);
+        String filePath = generateContentLikesListFilePath(conteentId);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        ArrayList<Chat> chats = new ArrayList<>();
+        ArrayList<comments> comments = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                Chat chat = objectMapper.readValue(line, Chat.class);
-                chats.add(chat);
+                comments comment = objectMapper.readValue(line, comments.class);
+                comments.add(comment);
             }
         } catch (IOException e) {
             System.err.println("Error reading accounts from file: " + e.getMessage());
             throw new RuntimeException("Failed to load accounts", e);
         }
         finally {
-            return chats;
+            return comments;
         }
 
     }
 
+    
+    
 }

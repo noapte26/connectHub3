@@ -2,12 +2,16 @@ package ChatSystemBackend;
 import Account.UserAccount;
 
 public class Message {
-    private final String chatId;
-    private final UserAccount sender;
-    private final String messageText;
-    private final String imagePath;
+    private  String chatId;
+    private  UserAccount sender;
+    private  String messageText;
+    private  String imagePath;
 
     // Constructor
+
+    public Message() {
+    }
+
     Message(String chatId, UserAccount sender, String messageText, String imagePath) {
         this.chatId = chatId;
         this.sender = sender;

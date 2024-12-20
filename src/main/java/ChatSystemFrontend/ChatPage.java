@@ -10,14 +10,11 @@ import ChatSystemBackend.Message;
 import ChatSystemBackend.MessageFileManager;
 import ChatSystemBackend.TheBuilder;
 import groupDataBase.MembersFileManager;
+
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -26,20 +23,44 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class ChatPage extends javax.swing.JFrame {
 
-   private String imagePath = "";
+    private String imagePath = "";
     private String chatId;  // Declare chatId as a member variable
     private UserAccount me;
-   
 
     public ChatPage(UserAccount meSender, UserAccount theres, String chatId) {
         initComponents();
         this.me = meSender;  // Set the me instance variable
         this.chatId = chatId; // Set the chatId
-        mainScreen.setViewportView(messagePanel);
+        // Configure panel1 with BorderLayout
+        panel1.setLayout(new BorderLayout());
+        panel1.setBackground(Color.GRAY); // Dark background for better visibility
+
+        // Profile Picture
+        ImageIcon profileIcon = new ImageIcon(theres.getProfile().getProfileImageUrl());
+        Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize
+        JLabel profilePicLabel = new JLabel(new ImageIcon(profileImage));
+        profilePicLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add padding
+        panel1.add(profilePicLabel, BorderLayout.WEST);
+
+        // User Details Panel
+        JPanel userDetailsPanel = new JPanel();
+        userDetailsPanel.setLayout(new BoxLayout(userDetailsPanel, BoxLayout.Y_AXIS));
+        userDetailsPanel.setBackground(Color.GRAY);
+
+        // Username Label
+        JLabel usernameLabel = new JLabel(theres.getUser().getUserName());
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        usernameLabel.setForeground(Color.WHITE);
+        userDetailsPanel.add(usernameLabel, BorderLayout.CENTER);
+        // Add userDetailsPanel to the center of panel1
+        panel1.add(userDetailsPanel, BorderLayout.CENTER);
+
+        jScrollPane1.setViewportView(messagePanel);
         // Display all messages in the chat panel
         displayMessages();
 
         setTitle("Messenger");
+        setVisible(true);
         this.setLocationRelativeTo(null);
     }
 
@@ -52,117 +73,138 @@ public class ChatPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainScreen = new javax.swing.JScrollPane();
-        messagePanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Input = new javax.swing.JTextArea();
+        messagePanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        input = new javax.swing.JTextArea();
+        upload = new javax.swing.JButton();
+        send = new javax.swing.JButton();
+        panel1 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        mainScreen.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        mainScreen.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
         javax.swing.GroupLayout messagePanelLayout = new javax.swing.GroupLayout(messagePanel);
         messagePanel.setLayout(messagePanelLayout);
         messagePanelLayout.setHorizontalGroup(
             messagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 607, Short.MAX_VALUE)
+            .addGap(0, 405, Short.MAX_VALUE)
         );
         messagePanelLayout.setVerticalGroup(
             messagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 463, Short.MAX_VALUE)
+            .addGap(0, 436, Short.MAX_VALUE)
         );
 
-        mainScreen.setViewportView(messagePanel);
+        jScrollPane1.setViewportView(messagePanel);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b..png"))); // NOI18N
-        jLabel1.setText("AN Hub");
+        input.setColumns(20);
+        input.setLineWrap(true);
+        input.setRows(5);
+        input.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(input);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/right-arrow.png"))); // NOI18N
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel3MousePressed(evt);
+        upload.setBackground(new java.awt.Color(153, 153, 153));
+        upload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/upload.png"))); // NOI18N
+        upload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadActionPerformed(evt);
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/upload.png"))); // NOI18N
-        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel4MousePressed(evt);
+        send.setBackground(new java.awt.Color(153, 153, 153));
+        send.setIcon(new javax.swing.ImageIcon(getClass().getResource("/right-arrow.png"))); // NOI18N
+        send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendActionPerformed(evt);
             }
         });
 
-        Input.setColumns(20);
-        Input.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Input.setLineWrap(true);
-        Input.setRows(5);
-        Input.setWrapStyleWord(true);
-        Input.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jScrollPane1.setViewportView(Input);
+        panel1.setBackground(new java.awt.Color(153, 153, 153));
+
+        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
+        panel1.setLayout(panel1Layout);
+        panel1Layout.setHorizontalGroup(
+            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panel1Layout.setVerticalGroup(
+            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 46, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(send)
+                            .addComponent(upload)))
+                    .addComponent(panel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(8, 8, 8))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(send)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(upload))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainScreen)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(261, 261, 261)
-                        .addComponent(jLabel1)))
-                .addContainerGap(20, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(mainScreen, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jLabel1))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jLabel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MousePressed
-     String text = Input.getText();
-    if (text.isEmpty() && imagePath.isEmpty()) {
-        // If both are empty, display a message
-        JOptionPane.showMessageDialog(this, "Please enter a message or upload an image.");
-        return;  // Stop the execution if both are empty
-    }
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        String text = input.getText();
+        if (text.isEmpty() && imagePath.isEmpty()) {
+            // If both are empty, display a message
+            JOptionPane.showMessageDialog(this, "Please enter a message or upload an image.");
+            return;  // Stop the execution if both are empty
+        }
 
-    // Create the message object using the actual chatId (already assigned in constructor)
-    TheBuilder builder = new TheBuilder(chatId, me);
-    
-    // Set the message text and image path in the builder
-    builder.setMessageText(text).setImagePath(imagePath);
-    Message message1 = builder.build();
-    MessageFileManager messageFileManager = new MessageFileManager("Message_lists", "Message");
-    ArrayList<Message> messages = messageFileManager.loadMessages(chatId);
-   messages.add(message1);
-   messageFileManager.saveMessage(me.getUser().getUserId(), messages);
-       
-      displayMessages(); 
-    }//GEN-LAST:event_jLabel3MousePressed
+        // Create the message object using the actual chatId (already assigned in constructor)
+        TheBuilder builder = new TheBuilder(chatId, me);
 
-    private void jLabel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MousePressed
+        // Set the message text and image path in the builder
+        builder.setMessageText(text).setImagePath(imagePath);
+        Message message1 = builder.build();
+        MessageFileManager messageFileManager = new MessageFileManager();
+        ArrayList<Message> messages = messageFileManager.loadMessage(chatId);
+        messages.add(message1);
+        messageFileManager.saveMessage(chatId, messages);
+        input.setText("");
+        displayMessages();
+    }//GEN-LAST:event_sendActionPerformed
+
+    private void uploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadActionPerformed
         // Open a file chooser dialog to select a file (e.g., image)
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select an Image");
@@ -181,65 +223,103 @@ public class ChatPage extends javax.swing.JFrame {
             // Get the file path and store it in the imagePath variable
             imagePath = selectedFile.getAbsolutePath();
 
-            // Optionally, display the file path in jLabel13
-            jLabel3.setText("File Path: " + imagePath);
-
             // The image path is now saved in the 'imagePath' variable, ready for use
         }
-    }//GEN-LAST:event_jLabel4MousePressed
-private void displayMessages() {
-        MessageFileManager messageFileManager = new MessageFileManager("Message_lists", "Message");
-        ArrayList<Message> messages = messageFileManager.loadMessages(chatId);
-        
-        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));  // Stack messages vertically
-        
-        // Set the message panel as the viewport view of the mainScreen
-        
-        
+
+    }//GEN-LAST:event_uploadActionPerformed
     
-        
-        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));  // Layout for displaying messages vertically
+       private void displayMessages() {
+    // Load messages
+    MessageFileManager messageFileManager = new MessageFileManager();
+    ArrayList<Message> messages = messageFileManager.loadMessage(chatId);
 
-        // Iterate through each message in the list
-        for (Message message : messages) {
-            JPanel msgContainer = new JPanel();  // This will hold the message content (text or image)
-
-            // Check if the message contains text or an image
-            String messageText = message.getMessageText();
-            String messageImagePath = message.getImagePath();
-
-            if (messageText != null && !messageText.isEmpty()) {
-                // If it's a text message, display it in a label
-                JLabel textLabel = new JLabel("<html>" + messageText + "</html>");  // Using HTML to allow line breaks
-                msgContainer.add(textLabel);
-            }
-
-            if (messageImagePath != null && !messageImagePath.isEmpty()) {
-                // If the message contains an image, display the image
-                ImageIcon imageIcon = new ImageIcon(messageImagePath);
-                JLabel imageLabel = new JLabel(imageIcon);
-                msgContainer.add(imageLabel);
-            }
-
-            // Add this message panel to the main message panel
-            messagePanel.add(msgContainer);
-        }
-
-        
+    if (messages == null) {
+        messages = new ArrayList<>();
     }
+
+    // Debug: Check loaded messages
+    System.out.println("Messages loaded: " + messages.size());
+
+    // Clear old content
+    messagePanel.removeAll();
+
+    if (messages.isEmpty()) {
+        // Configure layout and add "No messages" label
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+        JLabel noMessagesLabel = new JLabel("No messages available.");
+        noMessagesLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        noMessagesLabel.setForeground(Color.BLACK);
+        noMessagesLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messagePanel.add(noMessagesLabel);
+    } else {
+        // Configure layout for stacking messages vertically
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+
+        // Add each message to the panel
+        for (Message message : messages) {
+            JPanel msgContainer = new JPanel();
+            boolean isSender = message.getSender().getUser().getUserId().equals(me.getUser().getUserId());
+            msgContainer.setLayout(new FlowLayout(isSender ? FlowLayout.RIGHT : FlowLayout.LEFT));
+
+            // Profile picture
+            ImageIcon profileIcon = new ImageIcon(message.getSender().getProfile().getProfileImageUrl());
+            Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+            JLabel profilePicLabel = new JLabel(new ImageIcon(profileImage));
+
+            // Handle text message
+            if (message.getMessageText() != null && !message.getMessageText().isEmpty()) {
+                JLabel textLabel = new JLabel("<html>" + message.getMessageText() + "</html>");
+                textLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+                if (isSender) {
+                    msgContainer.add(textLabel);
+                    msgContainer.add(profilePicLabel);
+                } else {
+                    msgContainer.add(profilePicLabel);
+                    msgContainer.add(textLabel);
+                }
+            }
+
+            // Handle image message
+            if (message.getImagePath() != null && !message.getImagePath().isEmpty()) {
+                File imgFile = new File(message.getImagePath());
+                if (imgFile.exists()) {
+                    ImageIcon imageIcon = new ImageIcon(message.getImagePath());
+                    Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+                    JLabel imageLabel = new JLabel(new ImageIcon(image));
+                    msgContainer.add(imageLabel);
+                } else {
+                    System.out.println("Image file not found: " + message.getImagePath());
+                }
+            }
+
+            // Add spacing between messages
+            messagePanel.add(msgContainer);
+            messagePanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+        }
+    }
+
+    // Debug: Check if components are added to the panel
+    System.out.println("MessagePanel components count: " + messagePanel.getComponentCount());
+
+    // Update UI
+    messagePanel.revalidate();
+    messagePanel.repaint();
+    jScrollPane1.setViewportView(messagePanel); // Ensure the scroll pane updates
+}
+
+
     /**
      * @param args the command line arguments
      */
-    
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea Input;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JTextArea input;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane mainScreen;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel messagePanel;
+    private javax.swing.JPanel panel1;
+    private javax.swing.JButton send;
+    private javax.swing.JButton upload;
     // End of variables declaration//GEN-END:variables
 }

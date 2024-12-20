@@ -17,10 +17,10 @@ public class MessageFileManager {
     private  String baseDirectory;
     private ObjectMapper objectMapper;
     private String type;
-    public MessageFileManager(String baseDirectory, String type)
+    public MessageFileManager()
     {
-        this.type=type;
-        this.baseDirectory = baseDirectory;
+        this.type="message";
+        this.baseDirectory = "Message_List";
         this.objectMapper = new ObjectMapper();
         createBaseDirectory(); // Ensure the base directory exists
     }
@@ -36,8 +36,8 @@ public class MessageFileManager {
         return baseDirectory + File.separator + "message_" + senderId + "_"+this.type+".json";
     }
     
-    public void saveMessage(String senderId, ArrayList<Message> Messages) {
-        String filePath = generateFriendListFilePath(senderId);
+    public void saveMessage(String chatId, ArrayList<Message> Messages) {
+        String filePath = generateFriendListFilePath(chatId);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
@@ -65,7 +65,8 @@ public class MessageFileManager {
 
     }
     // Load the Messages for a specific chat
-    public ArrayList<Message> loadMessages(String chatId) {
+ 
+    public ArrayList<Message> loadMessage(String chatId) {
 
         String filePath = generateFriendListFilePath(chatId);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -76,17 +77,16 @@ public class MessageFileManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                Message message = objectMapper.readValue(line, Message.class);
-                messages.add(message);
+                Message Message = objectMapper.readValue(line, Message.class);
+                messages.add(Message);
             }
         } catch (IOException e) {
-            System.err.println("Error reading accounts from file: " + e.getMessage());
-            throw new RuntimeException("Failed to load accounts", e);
+            System.err.println("Error reading messages from file: " + e.getMessage());
+            throw new RuntimeException("Failed to load messages", e);
         }
         finally {
             return messages;
         }
 
     }
-
 }
