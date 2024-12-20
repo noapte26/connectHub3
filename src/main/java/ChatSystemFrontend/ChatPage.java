@@ -4,6 +4,7 @@
  */
 package ChatSystemFrontend;
 
+import Account.AccountLoad;
 import Account.UserAccount;
 import ChatSystemBackend.ChatFileManager;
 import ChatSystemBackend.Message;
@@ -26,17 +27,31 @@ public class ChatPage extends javax.swing.JFrame {
     private String imagePath = "";
     private String chatId;  // Declare chatId as a member variable
     private UserAccount me;
+    private UserAccount him;
 
     public ChatPage(UserAccount meSender, UserAccount theres, String chatId) {
+        
         initComponents();
         this.me = meSender;  // Set the me instance variable
+        this.him=theres;
         this.chatId = chatId; // Set the chatId
         // Configure panel1 with BorderLayout
+        
+        
+        ArrayList<UserAccount> accounts = new AccountLoad().loadAccounts();
+        UserAccount himm =new UserAccount();
+        for(UserAccount user:accounts)
+   {
+       if(user.getUser().getUserId().equals(him.getUser().getUserId()))
+       {
+           himm=user;
+       }
+   }
         panel1.setLayout(new BorderLayout());
         panel1.setBackground(Color.GRAY); // Dark background for better visibility
 
         // Profile Picture
-        ImageIcon profileIcon = new ImageIcon(theres.getProfile().getProfileImageUrl());
+        ImageIcon profileIcon = new ImageIcon(himm.getProfile().getProfileImageUrl());
         Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize
         JLabel profilePicLabel = new JLabel(new ImageIcon(profileImage));
         profilePicLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Add padding
@@ -229,7 +244,23 @@ public class ChatPage extends javax.swing.JFrame {
     }//GEN-LAST:event_uploadActionPerformed
     
        private void displayMessages() {
-    // Load messages
+   ArrayList<UserAccount> accounts = new AccountLoad().loadAccounts();
+   UserAccount mee=new UserAccount();
+   UserAccount himm=new UserAccount();
+   for(UserAccount user:accounts)
+   {
+       if(user.getUser().getUserId().equals(me.getUser().getUserId()))
+       {
+           mee=user;
+       }
+   }
+   for(UserAccount user:accounts)
+   {
+       if(user.getUser().getUserId().equals(him.getUser().getUserId()))
+       {
+           himm=user;
+       }
+   }
     MessageFileManager messageFileManager = new MessageFileManager();
     ArrayList<Message> messages = messageFileManager.loadMessage(chatId);
 
@@ -243,7 +274,7 @@ public class ChatPage extends javax.swing.JFrame {
     // Clear old content
     messagePanel.removeAll();
 
-    if (messages.isEmpty()) {
+     if (messages.isEmpty()) {
         // Configure layout and add "No messages" label
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
         JLabel noMessagesLabel = new JLabel("No messages available.");
@@ -261,8 +292,9 @@ public class ChatPage extends javax.swing.JFrame {
             boolean isSender = message.getSender().getUser().getUserId().equals(me.getUser().getUserId());
             msgContainer.setLayout(new FlowLayout(isSender ? FlowLayout.RIGHT : FlowLayout.LEFT));
 
-            // Profile picture
-            ImageIcon profileIcon = new ImageIcon(message.getSender().getProfile().getProfileImageUrl());
+            // Get the appropriate profile picture
+            String profileImageUrl = isSender ? mee.getProfile().getProfileImageUrl() : himm.getProfile().getProfileImageUrl();
+            ImageIcon profileIcon = new ImageIcon(profileImageUrl);
             Image profileImage = profileIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
             JLabel profilePicLabel = new JLabel(new ImageIcon(profileImage));
 
