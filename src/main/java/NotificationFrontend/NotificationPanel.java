@@ -16,6 +16,7 @@ import java.util.HashSet;
 import javax.swing.*;
 import InteractionFrontEnd.commentsWindow;
 import ChatSystemFrontend.ChatPage;
+import InteractionFrontEnd.likesWindow;
 
 public class NotificationPanel extends JFrame {
     private NotificationFileManager notificationManager;
@@ -201,6 +202,28 @@ public class NotificationPanel extends JFrame {
                    
                 });
                          buttonPanel.add(viewPostButton);
+                        
+                
+                break;
+                case "Post Like":
+              
+                        System.out.println("Iam in the post notification now");
+                        UserAccount likeOwner = GetAccount.getAccount(notification.getActionId());
+                        JLabel messageLabel1 = new JLabel(notification.getType() + ": " +likeOwner.getUser().getUserName());
+                        messageLabel1.setForeground(Color.WHITE);
+                        panel.add(messageLabel1, BorderLayout.CENTER);
+                        JButton viewPostButton1 = new JButton("View Post");
+                        viewPostButton1.addActionListener(e -> {
+                        // Open post view logic
+
+                         UserAccount userAccount = GetAccount.getAccount(notification.getRecipientId());
+                         if(userAccount != null){
+                         likesWindow cm = new likesWindow(notification.getPost());
+                        
+                     }
+                   
+                });
+                         buttonPanel.add(viewPostButton1);
                         
                 
                 break;
