@@ -11,6 +11,7 @@ import ProfileManagementFrontend.ProfileWindow;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FriendListWindow extends JFrame {
 
@@ -22,6 +23,7 @@ public class FriendListWindow extends JFrame {
         accounts = new AccountLoad().loadAccounts();
         this.Account = Account;
         fileManager = new FriendListFileManager();
+        HashMap<Object, Object> map=new HashMap<>();
         ArrayList<UserAccount> Friends = (ArrayList<UserAccount>) fileManager.loadFriendList(Account.getUser().getUserId());
         setTitle("Friends List");
         setSize(400, 600);
@@ -36,8 +38,11 @@ public class FriendListWindow extends JFrame {
 
         // Example Friends
         for (UserAccount user : Friends) {
-            JPanel friendPanel = createFriendPanel(user);
-            friendsContainer.add(friendPanel);
+            if(!map.containsKey(user.getUser().getUserId())) {
+                JPanel friendPanel = createFriendPanel(user);
+                friendsContainer.add(friendPanel);
+                map.put(user.getUser().getUserId(),true);
+            }
         }
 
         JScrollPane friendsScrollPane = new JScrollPane(friendsContainer);
