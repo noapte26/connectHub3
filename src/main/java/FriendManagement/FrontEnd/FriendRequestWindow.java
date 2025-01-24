@@ -90,7 +90,7 @@ public class FriendRequestWindow extends JFrame {
 
 // Add an action listener for the Confirm button
         confirmButton.addActionListener(e -> {
-           fileManager.confirmFriendRequest(Account,user.getUser().getUserName());
+           fileManager.confirmFriendRequest(Account,user);
             buttonPanel.removeAll();
             JLabel Accepted=new JLabel("You are now Friends");
             Accepted.setForeground(Color.LIGHT_GRAY);

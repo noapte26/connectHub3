@@ -108,17 +108,19 @@ public class FriendListFileManager {
     
 
     // Add a friend to the user's friend list
-    public void addFriend(String userId, String friendName) {
+    public void addFriend(String userId, UserAccount friendName) {
         ArrayList<UserAccount> friends = loadFriendList(userId);
         UserAccount friendAccount =null;
         for (UserAccount user : friends) {
-            if (user.getUser().getUserName().equalsIgnoreCase(friendName)) { // Case-insensitive comparison
+            if (user.getUser().getUserId().equals(friendName.getUser().getUserId())) { // Case-insensitive comparison
                 friendAccount=user;
-                break;
             }
         }
-        friends.add(friendAccount);
-        saveFriendList(userId, friends);
+        if(friendAccount==null)
+        {
+            friends.add(friendAccount);
+            saveFriendList(userId, friends);
+        }
     }
 
     // Remove a friend from the user's friend list
@@ -126,7 +128,7 @@ public class FriendListFileManager {
         ArrayList<UserAccount> friends = loadFriendList(userId);
         UserAccount friendAccount =null;
         for (UserAccount user : friends) {
-            if (user.getUser().getUserId().equalsIgnoreCase(user1.getUser().getUserId())) { // Case-insensitive comparison
+            if (user.getUser().getUserId().equals(user1.getUser().getUserId())) { // Case-insensitive comparison
                 friendAccount=user;
                 break;
             }

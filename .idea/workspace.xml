@@ -5,7 +5,61 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49775f05-0797-456a-8447-109bd9521358" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/ProfileManagementFrontend/ProfileWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ProfileManagementFrontend/ProfileWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Likes/Content_b4a83fda-75bf-4417-a55f-8eb4090eafde_likes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts.json" beforeDir="false" afterPath="$PROJECT_DIR$/accounts.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/comments/Content_b4a83fda-75bf-4417-a55f-8eb4090eafde_comments.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/friend_suggestions/user_USER-1_friend_suggestions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/group_lists/user_USER-1_group_list.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/groups.json" beforeDir="false" afterPath="$PROJECT_DIR$/groups.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post_database.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profiles.json" beforeDir="false" afterPath="$PROJECT_DIR$/profiles.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FriendManagement/FrontEnd/FriendRequestWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FriendManagement/FrontEnd/FriendRequestWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FriendMangement/BackEnd/FriendListFileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FriendMangement/BackEnd/FriendListFileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FriendMangement/BackEnd/FriendRequestFileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FriendMangement/BackEnd/FriendRequestFileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/NotificationFrontend/NotificationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NotificationFrontend/NotificationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FriendManagement/FrontEnd/FriendListWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FriendManagement/FrontEnd/FriendListWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FriendManagement/FrontEnd/FriendRequestWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FriendManagement/FrontEnd/FriendRequestWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FriendManagement/FrontEnd/FriendSuggestionsWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FriendManagement/FrontEnd/FriendSuggestionsWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FriendMangement/BackEnd/FriendListFileManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FriendMangement/BackEnd/FriendListFileManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/FriendMangement/BackEnd/FriendRequestFileManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/FriendMangement/BackEnd/FriendRequestFileManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GroupManagementBackEnd/adminRole.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GroupManagementBackEnd/adminRole.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GroupManagementFrontEnd/GroupWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GroupManagementFrontEnd/GroupWindow$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GroupManagementFrontEnd/GroupWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GroupManagementFrontEnd/GroupWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/InteractionFrontEnd/commentsWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NewsFeedFrontEnd/NewsFeedWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NotificationFrontend/NotificationPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NotificationFrontend/NotificationPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NotificationsBackend/Notification.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NotificationsBackend/Notification.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NotificationsBackend/NotificationFileManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NotificationsBackend/NotificationFileManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ProfileManagementFrontend/ProfileWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userCounter.txt" beforeDir="false" afterPath="$PROJECT_DIR$/userCounter.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,17 +77,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.WelcomeWindow.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/AL-ALAMIA/OneDrive/Documents/GitHub/connectHub3",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.WelcomeWindow.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/AL-ALAMIA/OneDrive/Documents/GitHub/connectHub3&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="WelcomeWindow" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="UserAccountManagementFrontend.WelcomeWindow" />

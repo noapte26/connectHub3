@@ -114,7 +114,7 @@ public class FriendRequestFileManager {
         }
 
     }
-    public void confirmFriendRequest(UserAccount rec, String friendName) {
+    public void confirmFriendRequest(UserAccount rec, UserAccount friendName) {
     // Load the friend requests and friend lists for both the receiver and sender
     FriendListFileManager fileManager = new FriendListFileManager();
 
@@ -126,7 +126,7 @@ public class FriendRequestFileManager {
     String senderId = null;
     UserAccount friendAccount = null;
     for (UserAccount user : friendRequests) {
-        if (user.getUser().getUserName().equalsIgnoreCase(friendName)) { // Case-insensitive comparison
+        if (user.getUser().getUserId().equalsIgnoreCase(friendName.getUser().getUserId())) { // Case-insensitive comparison
             friendAccount = user;
             senderId = user.getUser().getUserId();  // Get sender's ID
             break;
@@ -137,8 +137,11 @@ public class FriendRequestFileManager {
     if (friendAccount != null && senderId != null) {
         // Add the friend (receiver) to the sender's friend list
         ArrayList<UserAccount> senderFriends = fileManager.loadFriendList(senderId);
+        FriendListFileManager f=new FriendListFileManager();
+       /* f.addFriend(rec.getUser().getUserId(),friendName);
+        f.addFriend(friendAccount.getUser().getUserId(),rec);*/
         senderFriends.add(rec);  // Add the receiver to the sender’s list
-
+        
         // Add the sender to the receiver's friend list
         friends.add(friendAccount);
 

@@ -125,7 +125,7 @@ public class NotificationPanel extends JFrame {
 
                acceptButton.addActionListener(e -> {
                     UserAccount u1 = GetAccount.getAccount(notification.getActionId());
-                    new FriendRequestFileManager().confirmFriendRequest(currentUser, u1.getUser().getUserName());
+                    new FriendRequestFileManager().confirmFriendRequest(currentUser, u1);
                     JOptionPane.showMessageDialog(this, "Friend request accepted!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     dispose(); // Close the current panel and refresh notifications if needed
                    // new NotificationPanel(currentUser, notificationManager);
